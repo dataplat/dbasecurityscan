@@ -1,0 +1,37 @@
+{
+    "config": {
+        "default": "noAccess"
+    },
+    "roles": [
+        { 
+            "rolename": "db_datareader",
+            "owner": "dbo"
+        },
+        {
+            "rolename": "db_datawriter",
+            "owner": "dbo"
+        }
+    ],
+    "users": [
+                {
+                    "username": "testuser", 
+                    "roles": [
+                        "db_datareaderplus",
+                        "db_datawriter"
+                    ]
+                },
+                {
+                    "username": "testuser2", 
+                    "roles": [
+                        "db_datareader",
+                        "db_datawriter"
+                    ]
+                },
+                {
+                    "username": "readonly2",
+                    "roles": [
+                        "db_datareader"
+                    ]
+                }
+    ]
+}
