@@ -31,6 +31,6 @@ function Get-DbsConfig {
             }
             $objConfig += ConvertFrom-Json -InputObject $content
         }
-        $objConfig
+            
     }
 }
