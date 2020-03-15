@@ -1,0 +1,47 @@
+{
+    "config": {
+        "defaultAccess": "noAccess",
+        "test": "someValue"
+    },
+    "roles": [
+        { 
+            "rolename": "db_datareader",
+            "owner": "dbo"
+        },
+        {
+            "rolename": "db_datawriter",
+            "owner": "dbo"
+        }
+    ],
+    "users": [
+                {
+                    "username": "testuser", 
+                    "roles": [
+                        "db_datareader",
+                        "db_datawriter"
+                    ],
+                    "permissions":[
+                        {
+                            "object": "sp_perms",
+                            "permission": "exec"
+
+                        },
+                        {
+                            "object": "vw_select",
+                            "permission": "select"
+                        },
+                        {
+                            "object": "vw_select",
+                            "permission": "update"
+                        }
+                    ]
+                },
+                {
+                    "username": "readonly",
+                    "roles": [
+                        "db_datareader"
+                    ],
+                    "permissions":[]                
+                }
+    ]
+}

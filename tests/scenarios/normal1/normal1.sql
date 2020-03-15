@@ -16,3 +16,9 @@ GO
 
 exec sp_addrolemember 'db_datareader','readonly';
 go
+
+grant exec on sp_perms to testuser;
+go
+
+grant select on vw_select to READONLY;
+go
