@@ -1,0 +1,33 @@
+{
+    "config": {
+        "defaultAccess": "noAccess",
+        "test": "someValue",
+        "allSchema": "No"
+    },
+    "roles": [
+    ],
+    "users": [
+    ],
+    "schemas": [
+        {
+            "schemaname": "unowned",
+            "owner": "dbo",
+            "objects": [ 
+                {
+                    "object": "sp_test"
+                }
+            ]
+        },
+        {
+            "schemaname": "owned",
+            "owner": "schemaowner",
+            "objects": [
+                {
+                    "object": "sp_test"
+                }
+
+            ]
+        }
+    ]
+
+}

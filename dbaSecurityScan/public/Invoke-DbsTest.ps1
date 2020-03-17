@@ -1,4 +1,4 @@
-function Invoke-DbsTest {
+function Invoke-DssTest {
     <#
     .SYNOPSIS
         Runs the specified tests against the specified database(s)
@@ -10,13 +10,13 @@ function Invoke-DbsTest {
     .PARAMETER ConfigPath
 
     .EXAMPLE
-        Invoke-DbsTest -SqlInstance localhost -ConfigPath c:\tests\config.json
+        Invoke-DssTest -SqlInstance localhost -ConfigPath c:\tests\config.json
 
     .EXAMPLE
-        Invoke-DbsTest -SqlInstance localhost -ConfigPath http://github.com/someone/SqlTest/raw/config.json
+        Invoke-DssTest -SqlInstance localhost -ConfigPath http://github.com/someone/SqlTest/raw/config.json
 
     .EXAMPLE
-        Invoke-DbsTest -SqlInstance localhost -ConfigPath c:\tests\secrets.json, http://github.com/someone/SqlTest/raw/config.json
+        Invoke-DssTest -SqlInstance localhost -ConfigPath c:\tests\secrets.json, http://github.com/someone/SqlTest/raw/config.json
 
     #>
     [CmdletBinding(DefaultParameterSetName = "Default")]
@@ -35,7 +35,7 @@ function Invoke-DbsTest {
         }
     }
     process {
-        $config = Get-DbsConfig -ConfigPath $ConfigPath
+        $config = Get-DssConfig -ConfigPath $ConfigPath
     }
     end {}
 }

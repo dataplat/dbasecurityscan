@@ -1,4 +1,4 @@
-function Get-DbsConfig {
+function Get-DssConfig {
     <#
     .SYNOPSIS
         Gets the test config from the specified folder
