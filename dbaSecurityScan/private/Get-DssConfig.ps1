@@ -15,6 +15,7 @@ function Get-DssConfig {
     end {
         $objConfig = @()
         Foreach ($config in $ConfigPath){
+            Write-Verbose -Message "Fetching $config"
             if ($config -match '^http.*') {
                 $response = Invoke-WebRequest $config
                 if ($response.StatusCode -eq '200') {
@@ -31,6 +32,6 @@ function Get-DssConfig {
             }
             $objConfig += ConvertFrom-Json -InputObject $content
         }
-            
+        $objConfig  
     }
 }

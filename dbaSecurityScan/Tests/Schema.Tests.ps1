@@ -6,9 +6,9 @@ param (
 )
 
 $connectionSplat = @{
-            "SqlInstance"   = $SqlInstance,
-            "SqlCredential" = $SqlCredential,
-            "Database"      = $Database
+            SqlInstance  = $SqlInstance
+            SqlCredential = $SqlCredential
+            Database      = $Database
 }
 
 $sqlSchema = "
