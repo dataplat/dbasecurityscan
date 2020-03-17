@@ -15,6 +15,9 @@
             "objects": [ 
                 {
                     "object": "sp_test"
+                },
+                {
+                    "object": "missing"
                 }
             ]
         },

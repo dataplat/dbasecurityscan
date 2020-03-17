@@ -1,0 +1,17 @@
+{
+    "config": {
+        "defaultAccess": "noAccess",
+        "test": "someValue",
+        "allSchema": "No"
+    },
+    "roles": [
+        {
+            "rolename" : "testrole",
+            "roleowner": "dbo",
+            "members" : [
+                {"user": "fred"},
+                {"user": "george"}
+            ]
+        }
+    ]
+}
