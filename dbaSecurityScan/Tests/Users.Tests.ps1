@@ -33,17 +33,17 @@ Foreach ($case in $config) {
             $testPermissions =  Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database
             # Go through to check the specified permissions are there
             Foreach($permission in $case.Permissions){
-                It "Should have assigned $($case.userName) $($permission.permission) on $($permission.object)" {
-                    ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -eq $permission.object -and $_.permission -eq $permission.permission}).Count | Should -Be 1
+                It "Should have assigned $($case.userName) $($permission.permission) on $($permission.securable)" {
+                    ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -eq $permission.securable -and $_.permission -eq $permission.permission}).Count | Should -Be 1
                 }
 
             }
             # Go through again to make sure no other permissions are there
             # Foreach ($permission in $testPermissions){
-                It "Should not have assigned $($case.userName) $($permission.permission) on $($permission.object)" {
-                    ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -notin ($case.permissions.object) -and $_.permission -notin ($case.permissions.permission)}).Count | Should -Be 0 -Because "Should only have defined permissions"
+                It "Should not have assigned $($case.userName) $($permission.permission) on $($permission.securable)" {
+                    ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -notin ($case.permissions.securable) -and $_.permission -notin ($case.permissions.permission)}).Count | Should -Be 0 -Because "Should only have defined permissions"
                 }
-                $testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -notin ($case.permissions.object) -and $_.permission -notin ($case.permissions.permission)}
+                $testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -notin ($case.permissions.securable) -and $_.permission -notin ($case.permissions.permission)}
             # }
         # }
     }

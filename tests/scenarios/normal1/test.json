@@ -21,20 +21,20 @@
                         "db_datawriter"
                     ],
                     "permissions":[
-                        {   "object": "normal1",
+                        {   "securable": "normal1",
                             "permission": "connect"
                         },
                         {
-                            "object": "sp_perms",
+                            "securable": "sp_perms",
                             "permission": "execute"
 
                         },
                         {
-                            "object": "vw_select",
+                            "securable": "vw_select",
                             "permission": "select"
                         },
                         {
-                            "object": "vw_select",
+                            "securable": "vw_select",
                             "permission": "update"
                         }
                     ]
@@ -45,11 +45,11 @@
                         "db_datareader"
                     ],
                     "permissions":[
-                        {   "object": "normal1",
+                        {   "securable": "normal1",
                             "permission": "connect"
                         },
                         {
-                            "object": "vw_select",
+                            "securable": "vw_select",
                             "permission": "select"
                         }
                     ]                
