@@ -9,7 +9,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# RootModule = ''
+RootModule = 'dbaSecuritcyScan.psm1'
 
 # Version number of this module.
 ModuleVersion = '0.0.1'
@@ -38,7 +38,6 @@ PowerShellVersion = '3.0'
 # Modules that must be imported into the global environment prior to importing this module
  RequiredModules = @(
         @{ ModuleName = 'dbatools'; ModuleVersion = '1.0.61' }
-        @{ ModuleName = 'dbachecks'; ModuleVersion = '1.2.22' }
         @{ ModuleName = 'Pester'; ModuleVersion = '4.9.0' }
 )
 
