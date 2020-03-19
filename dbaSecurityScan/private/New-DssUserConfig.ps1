@@ -35,7 +35,6 @@ Function New-DssUserConfig {
                 permissions = $permissions
                 roles = $role.role
             }
-        $output
         }
     }
 } 
