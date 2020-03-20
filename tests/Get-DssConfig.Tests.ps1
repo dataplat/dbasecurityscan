@@ -5,12 +5,17 @@ Describe "Unit tests for $commandName" {
         (Get-Command -Module dbaSecurityScan | Where-Object {$_.Name -eq $commandName}).count | Should -Be 1
     }
 }
-(& sqlcmd -S localhost\sql2017 -U -b -i "$PSScriptroot\tests\scenarios\normal1\normal1.sql" -d "master")
-$sqlinstance = 'localhost\sql2017'
+$sqlInstance = 'localhost\sql2017'
+(& sqlcmd -S $sqlInstance -b -i "$PSScriptroot\tests\scenarios\normal1\normal1.sql" -d "master")
+
 Describe "Integration tests for $commandName" {
-    $outfile = 'c:\temp\Userconfig.json'
-    Get-DssConfig -SqlInstance $sqlinstance  -Database Normal1 -ConfigPath $outfile -UserConfig
-    It "Should get a UserConfig" {
-        Test-Path $outfile | Should -Be $true
+    $outfile = "$PSScriptRoot\tests\scenarios\normal1\test.json'"
+    $config = Get-DssConfig -ConfigPath $outfile 
+    It "Should get a Config" {
+        $config.Count | Should -Be 1
+    }
+    It "Should have content" {
+        $config.Users.Count | Should -Be 2
+        $config.Users.Roles.Count | Should -Be 3
     }
 }
