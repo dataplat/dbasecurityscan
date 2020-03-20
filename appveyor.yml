@@ -19,6 +19,9 @@ shallow_clone: true
 environment:
   environment: master
   version: 0.0.$(appveyor_build_number)
+  services:
+    - mssql2017
+  
 
 # build_script:
 # # grab appveyor lab files and needed requirements for tests in CI
