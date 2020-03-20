@@ -43,7 +43,7 @@ function New-DssConfig {
     param (
         [string]$SqlInstance,
         [PSCredential]$SqlCredential,
-        [string[]]$ConfigPath,
+        [string]$ConfigPath,
         [string]$Database,
         [switch]$UserConfig,
         [switch]$RoleConfig,
@@ -54,25 +54,25 @@ function New-DssConfig {
     process {}
     end {
         $configSwitch = $true
-        if ($UserConfig -or $SchemaConfig -or $RoleConfig -or $OjbectConfig){
-            $configSwitch = $false
-        }
-        if ($UserConfig -or $configSwitch) {
+        # if ($UserConfig -or $SchemaConfig -or $RoleConfig -or $ObjectConfig){
+        #     $configSwitch = $false
+        # }
+        # if ($UserConfig -or $configSwitch) {
             $configUser = New-DssUserConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
-        } elseif ($RoleConfig -or $configSwitch) {
-            $configRole = New-DssRoleConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
-        } elseif ($SchemaConfig -or $configSwitch) {
-            $configSchema = New-DssSchemaConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
-        } elseif ($ObjectConfig -or $configSwitch) {
-            $configObject = New-DSSObjectConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
-        }
+        # } elseif ($RoleConfig -or $configSwitch) {
+        #     $configRole = New-DssRoleConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
+        # } elseif ($SchemaConfig -or $configSwitch) {
+        #     $configSchema = New-DssSchemaConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
+        # } elseif ($ObjectConfig -or $configSwitch) {
+        #     $configObject = New-DSSObjectConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
+        # }
 
         $output = [PsCustomObject]@{
                     roles = $configRole
                     users = $configUser
                     schema = $configSchema
                     object = $configObject
-        } | ConvertTo-Json -Depth 4
+        } | ConvertTo-Json -Depth 5
 
         if ($ConfigPath -ne ''){
             $output | Out-File $ConfigPath

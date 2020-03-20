@@ -23,7 +23,8 @@ function Invoke-DssTest {
     param (
         [string[]]$ConfigPath,
         [string]$SqlInstance,
-        [PSCredential]$SqlCredential
+        [PSCredential]$SqlCredential,
+        [string]$Database
     )
     begin {
         try {
@@ -36,6 +37,7 @@ function Invoke-DssTest {
     }
     process {
         $config = Get-DssConfig -ConfigPath $ConfigPath
+        Invoke-Pester -Script @{ Path =  "$PSModuleRoot\checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; Config= $config; Database=$database} }
     }
     end {}
 }

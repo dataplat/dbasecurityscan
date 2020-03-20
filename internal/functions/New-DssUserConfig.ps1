@@ -26,15 +26,16 @@ Function New-DssUserConfig {
         $output = @()
 
         $securable= Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database | Where-Object {$_.SourceView -eq 'sys.all_objects'}
-        $roles= Get-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential  -Database $Database
+        $roles= Get-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
 
         Foreach ($user in ($securable| Select-Object -unique grantee)){
             $role = $roles | Where-Object {$_.member -eq $user.grantee} | Select-Object -Property role
             $permissions = $securable | Where-Object {$_.grantee -eq $user.grantee} | Select-Object -Property  schemaowner,securable,permission
             $output += [PsCustomObject]@{username = $user.Grantee
                 permissions = $permissions
-                roles = $role.role
+                roles = $roles.role
             }
         }
+    $output
     }
 } 
