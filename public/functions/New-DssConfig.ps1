@@ -44,11 +44,11 @@ function New-DssConfig {
         [string]$SqlInstance,
         [PSCredential]$SqlCredential,
         [string[]]$ConfigPath,
-        [string]Database,
-        [switch]UserConfig,
-        [switch]RoleConfig,
-        [switch]SchemaConfig,
-        [switch]ObjectConfig
+        [string]$Database,
+        [switch]$UserConfig,
+        [switch]$RoleConfig,
+        [switch]$SchemaConfig,
+        [switch]$ObjectConfig
     )
     begin {}
     process {}
