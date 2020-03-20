@@ -41,7 +41,14 @@ function New-DssConfig {
     #>
     [CmdletBinding(DefaultParameterSetName = "Default")]
     param (
-        [string[]]$ConfigPath
+        [string]$SqlInstance,
+        [PSCredential]$SqlCredential,
+        [string[]]$ConfigPath,
+        [string]Database,
+        [switch]UserConfig,
+        [switch]RoleConfig,
+        [switch]SchemaConfig,
+        [switch]ObjectConfig
     )
     begin {}
     process {}
