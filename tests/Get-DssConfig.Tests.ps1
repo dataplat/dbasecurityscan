@@ -6,10 +6,10 @@ Describe "Unit tests for $commandName" {
     }
 }
 $sqlInstance = 'localhost\sql2017'
-(& sqlcmd -S $sqlInstance -b -i "$PSScriptroot\tests\scenarios\normal1\normal1.sql" -d "master")
+(& sqlcmd -S $sqlInstance -b -i "$PSScriptroot\scenarios\normal1\normal1.sql" -d "master")
 
 Describe "Integration tests for $commandName" {
-    $outfile = "$PSScriptRoot\tests\scenarios\normal1\test.json'"
+    $outfile = "$PSScriptRoot\scenarios\normal1\test.json'"
     $config = Get-DssConfig -ConfigPath $outfile 
     It "Should get a Config" {
         $config.Count | Should -Be 1
