@@ -15,7 +15,7 @@ if ($env:BUILD_BUILDURI -like "vstfs*") {
 Write-Host "Loading constants"
 . "$PSScriptRoot\constants.ps1"
 
-Write-Host "Importing dbadisa"
+Write-Host "Importing dbaSecurityScans"
 Import-Module "$PSScriptRoot\..\dbaSecurityScan.psd1"
 
 $totalFailed = 0
