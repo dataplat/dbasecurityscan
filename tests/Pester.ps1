@@ -16,7 +16,7 @@ Write-Host "Loading constants"
 . "$PSScriptRoot\constants.ps1"
 
 Write-Host "Importing dbadisa"
-Import-Module "$PSScriptRoot\..\dbadisa.psd1"
+Import-Module "$PSScriptRoot\..\dbaSecurityScan.psd1"
 
 $totalFailed = 0
 $totalRun = 0
