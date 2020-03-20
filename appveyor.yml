@@ -1,4 +1,5 @@
 # See http://www.appveyor.com/docs/appveyor-yml for many more options
+build: off
 version: 0.0.{build}
 
 cache:
