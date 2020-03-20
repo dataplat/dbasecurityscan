@@ -1,6 +1,7 @@
 $script:ModuleRoot = $PSScriptRoot
 $VerbosePreference = "Continue"
 
+Write-verbose "$PSScriptRoot"
 function Import-ModuleFile {
     [CmdletBinding()]
     Param (
@@ -28,6 +29,6 @@ foreach ($function in (Get-ChildItem "$ModuleRoot\internal\functions\*.ps1")) {
 }
 
 # Import all public functions
-foreach ($function in (Get-ChildItem "$ModuleRoot\functions\*.ps1")) {
+foreach ($function in (Get-ChildItem "$ModuleRoot\public\functions\*.ps1")) {
     . Import-ModuleFile -Path $function.FullName
 }
