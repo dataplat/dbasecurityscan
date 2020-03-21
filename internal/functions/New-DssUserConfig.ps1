@@ -16,7 +16,7 @@ Function New-DssUserConfig {
     #>
     [CmdletBinding(DefaultParameterSetName = "Default")]
     param (
-        [Object]$SqlInstance,
+        [string]$SqlInstance,
         [PSCredential]$SqlCredential,
         [String]$Database
     )
