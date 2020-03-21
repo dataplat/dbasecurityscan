@@ -14,14 +14,12 @@ install:
 # - C:\Program Files\WindowsPowerShell\Modules\Pester -> appveyor.yml
 # - C:\Program Files\WindowsPowerShell\Modules\dbatools -> appveyor.yml
 
-# shallow_clone: true
+clone_folder: c:\github\dbatools
 clone_depth: 5
 
 environment:
   environment: master
   version: 0.0.$(appveyor_build_number)
-#   services:
-#     - mssql2017
 
 services:
   - mssql2017
