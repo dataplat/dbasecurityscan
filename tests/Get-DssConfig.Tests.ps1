@@ -9,13 +9,13 @@ Describe "Unit tests for $commandName" {
 # (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$PSScriptroot\scenarios\normal1\normal1.sql" -d "master")
 
 Describe "Integration tests for $commandName" {
-    $outfile = "c:\github\dbaSecurityScan\tests\scenarios\normal1\test.json"
+    $outfile = "$PSScriptRoot\scenarios\normal1\test.json"
     $config = Get-DssConfig -ConfigPath $outfile 
     It "File Config Should Exist" {
         Test-Path $outfile | Should -Be $true
     }
     It "Should get a Config" {
-        $config.Count | Should -Be 1
+        $config.Config.defaultAccess | Should -Be 'noAccess'
     }
     It "Should have content" {
         $config.Users.Count | Should -Be 2
