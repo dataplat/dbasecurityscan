@@ -33,7 +33,7 @@ Function New-DssUserConfig {
             $permissions = $securable | Where-Object {$_.grantee -eq $user.grantee} | Select-Object -Property  schemaowner,securable,permission
             $output += [PsCustomObject]@{username = $user.Grantee
                 permissions = $permissions
-                roles = $roles.role
+                roles = $role.role
             }
         }
     $output
