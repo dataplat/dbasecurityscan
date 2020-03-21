@@ -1,4 +1,6 @@
 $commandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
+Write-host "importing $PSScriptRoot/constants.ps1 "
+. "$PSScriptRoot/constants.ps1"
 
 Describe "Unit tests for $commandName"{
     It "$commandName Should Exist" {
@@ -7,17 +9,18 @@ Describe "Unit tests for $commandName"{
 }
 
 Describe "Integration Tests for $commandName" {
-    $password = ConvertTo-SecureString 'Password12!' -AsPlainText -Force
-    $sqlCredential = New-Object System.Management.Automation.PSCredential ('sa', $password)
-    $config = New-DssUserConfig -SqlInstance $sqlInstance -SqlCredential $sqlCredential -Database normal1
-
+    $config = New-DssUserConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database normal1
 
     It "Should have users" {
         $config.Users | Should -HaveCount 2
     }
 
+    $pConfig = [PsCustomObject]@{
+        users = $config
+    }
+
     It "Should Test db properly" {
-        $pesterOut = Invoke-Pester -Script @{ Path = "c:\github\dbaSecurityScan\Checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; Config = $config; SqlCredential = $sqlCredential; Database = "normal1"} } -PassThru
+        $pesterOut = Invoke-Pester -Script @{ Path = "$script:appvModuleRoot\Checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $script:appvSqlInstance; Config = $pConfig; SqlCredential = $script:appvSqlCredential; Database = "normal1"} } -PassThru
         $pesterOut.PassedCount | Should -Be $pesterOut.TotalCount
     }
 }
