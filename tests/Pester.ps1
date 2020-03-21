@@ -30,7 +30,8 @@ $testresults = @()
 Write-Host "Running individual tests"
 foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1" -Recurse)) {
     Write-Host "Executing $($file.Name)"
-    $results = Invoke-Pester -Script $file.FullName -Show None -PassThru
+    $testResultsFile = ".\TestsResults.xml"
+    $results = Invoke-Pester -Script $file.FullName -Show None -PassThru -OutputFormat NUnitXml -OutputFile $testResultsFile
     foreach ($result in $results) {
         $totalRun += $result.TotalCount
         $totalFailed += $result.FailedCount
@@ -48,7 +49,7 @@ foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1" -Re
 }
 
 $testresults | Sort-Object Describe, Context, Name, Result, Message | Format-List
-
+(New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
 if ($totalFailed -gt 0) {
     throw "$totalFailed / $totalRun tests failed"
 }
