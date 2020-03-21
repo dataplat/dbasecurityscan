@@ -1,6 +1,6 @@
 param (
     [object]$config,
-    [Object]$SqlInstance,
+    [string]$SqlInstance,
     [PSCredential]$SqlCredential,
     [String]$Database
 )
