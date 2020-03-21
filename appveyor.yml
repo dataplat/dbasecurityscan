@@ -3,9 +3,9 @@ build: off
 version: 0.0.{build}
 
 install:
-    - ps: Install-Module Pester -Force -Scope CurrentUser
-    - ps: Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
-    - ps: Install-Module dbatools -Force -Scope CurrentUser
+    - ps core: Install-Module Pester -Force -Scope CurrentUser
+    - ps core: Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+    - ps core: Install-Module dbatools -Force -Scope CurrentUser
 
 # cache:
 # - C:\ProgramData\chocolatey\bin -> appveyor.yml
@@ -34,7 +34,7 @@ services:
 
 test_script:
 # Test with PowerShell and Pester
-- ps: .\build\appveyor.pester.ps1
+- ps core: .\build\appveyor.pester.ps1
 
 # on_finish:
 #   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
