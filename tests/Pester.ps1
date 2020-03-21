@@ -35,7 +35,8 @@ foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1" -Re
     foreach ($result in $results) {
         $totalRun += $result.TotalCount
         $totalFailed += $result.FailedCount
-        $result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
+        # $result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
+        $result.TestResult | Where-Object { $true } | ForEach-Object {
             $name = $_.Name
             $testresults += [pscustomobject]@{
                 Describe = $_.Describe
