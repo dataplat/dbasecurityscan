@@ -6,18 +6,17 @@ Describe "Unit tests for $commandName"{
     }
 }
 
-Describe "Inegration Tests for $commandName" {
-    $sqlInstance = 'localhost\sql2017'
-    (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$PSScriptroot\scenarios\normal1\normal1.sql" -d "master")
+Describe "Itnegration Tests for $commandName" {
     $password = ConvertTo-SecureString 'Password12!' -AsPlainText -Force
     $sqlCredential = New-Object System.Management.Automation.PSCredential ('sa', $password)
     $config = New-DssUserConfig -SqlInstance $sqlInstance -SqlCredential $sqlCredential -Database normal1
 
     It "Should have returned a PSCustomObject"{
-        $config | Should -BeOfType PSCustomObject
+        $config | Should -BeOfType [PSCustomObject]
     }
 
     It "Should have users" {
-        $config.Users.count | Should -BeGreaterThan 1
-    } 
+        $config.Users.count | Should -HaveCount 2
+    }
+
 }

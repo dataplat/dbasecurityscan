@@ -15,6 +15,11 @@ if ($env:BUILD_BUILDURI -like "vstfs*") {
 Write-Host "Loading constants"
 . "$PSScriptRoot\constants.ps1"
 
+Write-Host "Building Test Scenarios"
+$sqlInstance = 'localhost\sql2017'
+ForEach ($sql in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql")){
+    (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
+}
 Write-Host "Importing dbaSecurityScans"
 Import-Module "$PSScriptRoot\..\dbaSecurityScan.psd1"
 
