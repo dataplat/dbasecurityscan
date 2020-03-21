@@ -27,13 +27,13 @@ function Invoke-DssTest {
         [string]$Database
     )
     begin {
-        try {
-            $server = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-        }
-        catch {
-            Write-Warning -Message "Cannot connect to $SqlInstance, stopping"
-            return 
-        }
+        # try {
+        #     $server = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        # }
+        # catch {
+        #     Write-Warning -Message "Cannot connect to $SqlInstance, stopping"
+        #     return 
+        # }
     }
     process {
         $config = Get-DssConfig -ConfigPath $ConfigPath
