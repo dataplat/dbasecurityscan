@@ -20,8 +20,12 @@ environment:
   environment: master
   version: 0.0.$(appveyor_build_number)
   services:
-#     - mssql2017
-  
+    - mssql2017
+
+# services:
+# - mssql2017
+      
+       
 
 # build_script:
 # # grab appveyor lab files and needed requirements for tests in CI
@@ -32,5 +36,5 @@ test_script:
 # Test with PowerShell and Pester
 - ps: .\build\appveyor.pester.ps1
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
