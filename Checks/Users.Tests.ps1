@@ -12,19 +12,19 @@ $dbUserRoles = Get-DbaDbRoleMember -SqlInstance $sqlinstance -SqlCredential $Sql
 $dbRoles = Get-DbaDbRole -SqlInstance $sqlinstance -SqlCredential $SqlCredential -Database $database 
 Foreach ($case in $config.users) {
     Describe "Checking $($case.username)" {
-        It "$($case.username) should exist" {
+        It "$($case.username) should exist in database" {
             $case.username | Should -BeIn $dbUsers.Name -Because "User Should exist"
         }
         if ($case.roles.count -gt 0){
             Foreach ($role in $case.roles){
-                It "$($case.username) should be a member of $role " {
+                It "$($case.username) should be a member of $role (Config)" {
                     $role | Should -BeIn $dbUserRoles.Role
                 }
             }
         }
-        $testRoles = $dbUserRoles | where-Object {$case.UserName -eq $_.UserName}
+        $testRoles = $dbUserRoles | where-Object {$_.UserName -eq $case.UserName}
         ForEach ($role in $testRoles){
-            It "$($case.username) Should be in $($role.Role)" {
+            It "$($case.username) Should be in $($role.Role) (DB)" {
                 $role.Role | Should -BeIn $case.roles -Because "User should only be in the specified roles"
             }
         }
@@ -40,10 +40,10 @@ Foreach ($case in $config.users) {
             }
             # Go through again to make sure no other permissions are there
             #Foreach ($permission in $testPermissions){
-                It "Should not have assigned $($case.userName) $($permission.permission) on $($permission.securable)" {
-                    ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -notin ($case.permissions.securable) -and $_.permission -notin ($case.permissions.permission)} | Measure-Object).Count | Should -Be 0 -Because "Should only have defined permissions"
-                }
-               $testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -notin ($case.permissions.securable) -and $_.permission -notin ($case.permissions.permission)}
+            #     It "Should not have assigned $($case.userName) $($permission.permission) on $($permission.securable)" {
+            #         ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -notin ($case.permissions.securable) -and $_.permission -notin ($case.permissions.permission)} | Measure-Object).Count | Should -Be 0 -Because "Should only have defined permissions"
+            #     }
+            #    $testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -notin ($case.permissions.securable) -and $_.permission -notin ($case.permissions.permission)}
            # }
         }
     }
