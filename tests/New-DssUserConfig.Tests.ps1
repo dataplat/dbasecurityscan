@@ -7,7 +7,7 @@ Describe "Unit tests for $commandName"{
 }
 
 Describe "Inegration Tests for $commandName" {
-    $sqlInstance = '(local)\sql2017'
+    $sqlInstance = 'localhost\sql2017'
     (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$PSScriptroot\scenarios\normal1\normal1.sql" -d "master")
     $password = ConvertTo-SecureString 'Password12!' -AsPlainText -Force
     $sqlCredential = New-Object System.Management.Automation.PSCredential ('sa', $password)
