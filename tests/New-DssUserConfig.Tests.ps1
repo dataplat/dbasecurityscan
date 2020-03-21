@@ -17,7 +17,7 @@ Describe "Integration Tests for $commandName" {
     }
 
     It "Should Test db properly" {
-        $pesterOut = Invoke-Pester -Script @{ Path = "$PSScriptRoot\checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; Config = $config; Database = "normal1"} } -PassThru
+        $pesterOut = Invoke-Pester -Script @{ Path = "c:\github\dbaSecurityScan\checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; Config = $config; Database = "normal1"} } -PassThru
         $pesterOut.PassedCount | Should -Be $pesterOut.TotalCount
     }
 }
