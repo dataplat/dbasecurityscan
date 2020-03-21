@@ -5,8 +5,8 @@ Describe "Unit tests for $commandName" {
         (Get-Command -Module dbaSecurityScan | Where-Object {$_.Name -eq $commandName}).count | Should -Be 1
     }
 }
-$sqlInstance = 'localhost\sql2017'
-(& sqlcmd -S "$sqlInstance" -b -i "$PSScriptroot\scenarios\normal1\normal1.sql" -d "master")
+$sqlInstance = '(local)\sql2017'
+(& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$PSScriptroot\scenarios\normal1\normal1.sql" -d "master")
 
 Describe "Integration tests for $commandName" {
     $outfile = "$PSScriptRoot\scenarios\normal1\test.json'"
