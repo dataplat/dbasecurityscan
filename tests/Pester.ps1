@@ -17,7 +17,7 @@ Write-Host "Loading constants"
 
 Write-Host "Building Test Scenarios"
 $sqlInstance = 'localhost\sql2017'
-ForEach ($sql in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql")){
+ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)){
     (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
 }
 Write-Host "Importing dbaSecurityScans"
