@@ -1,9 +1,3 @@
-use master
-go
-
-drop database schema1;
-go
-
 create database schema1
 go
 
