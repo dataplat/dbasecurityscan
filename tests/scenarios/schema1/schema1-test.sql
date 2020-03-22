@@ -1,3 +1,9 @@
+use master
+go
+
+drop database schema1;
+go
+
 create database schema1
 go
 
@@ -19,4 +25,9 @@ GO
 
 create procedure owned.sp_test AS
 select * from sys.all_columns
+go
+
+create user test without login;
+go
+grant select on SCHEMA::unowned to test;
 go

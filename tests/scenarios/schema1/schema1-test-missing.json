@@ -16,6 +16,9 @@
                 {
                     "object": "sp_test"
                 },
+                {
+                    "object": "missing"
+                }
             ]
         },
         {

@@ -62,7 +62,7 @@ function New-DssConfig {
         # } elseif ($RoleConfig -or $configSwitch) {
         #     $configRole = New-DssRoleConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
         # } elseif ($SchemaConfig -or $configSwitch) {
-        #     $configSchema = New-DssSchemaConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
+            $configSchema = New-DssSchemaConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
         # } elseif ($ObjectConfig -or $configSwitch) {
         #     $configObject = New-DSSObjectConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
         # }
@@ -70,7 +70,7 @@ function New-DssConfig {
         $output = [PsCustomObject]@{
                     roles = $configRole
                     users = $configUser
-                    schema = $configSchema
+                    schemas = $configSchema
                     object = $configObject
         } | ConvertTo-Json -Depth 5
 

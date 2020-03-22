@@ -11,6 +11,7 @@ $connectionSplat = @{
             Database      = $Database
 }
 
+# FIXME: Potential dbatools command to migrate across. Get Schema details
 $sqlSchema = "
         select 
             ss.name as 'schemaName', 
@@ -26,7 +27,7 @@ Foreach ($schema in $config.schemas) {
         It "Schema $($schema.schemaname) should exist and be owned by $($schema.owner)" {
             ($dbSchema | Where-Object {$_.schemaName -eq $schema.schemaname -and $_.owner -eq $schema.owner}).count | Should -Be 1
         }
-        $checkSql = "select name, type_desc from sys.all_objects where schema_id=SCHEMA_ID('$($schema.schemaname)')"
+        $checkSql = "select name, type_desc from sys.all_objects where schema_id=SCHEMA_ID('$($schema.schemaname)') and is_ms_shipped=0"
         $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database "schema1" -Query $checkSql 
             
         It "Schema $($schema.schemaname) should contain $($schema.objects.count) Objects" {
