@@ -5,8 +5,6 @@ param (
     [String]$Database
 )
 
-$filename = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
-
 $roles = Get-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database
 $roleMembers = Get-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database
 $permissions = Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database
