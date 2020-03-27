@@ -9,7 +9,7 @@ Describe "Unit tests for $commandName"{
 }
 
 Describe "Integration Tests for $commandName" {
-    $config = New-DssUserConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database normal1
+    $config = New-DssConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database normal1 -UserConfig
 
     It "Should have users" {
         $config.Users | Should -HaveCount 2
