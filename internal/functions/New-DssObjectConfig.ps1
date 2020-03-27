@@ -42,7 +42,7 @@ Function New-DssObjectConfig {
         $objects += Get-DbaDbStoredProcedure -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -ExcludeSystemSp:$exclude | Select-Object Schema, Name
         $permissions = Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database 
         ForEach ($object in $objects){
-            $permission = $permissions | Where-Object {$_.Schema -eq $object.SchemaOwner -and $_.Securable -eq $object.name} | select-Object grantee, permission
+            $permission = $permissions | Where-Object {$_.SchemaOwner -eq $object.Schema -and $_.Securable -eq $object.name} | select-Object grantee, permission
             $output += [PSCustomObject]@{
                 object = $object.Name
                 schema = $object.schema

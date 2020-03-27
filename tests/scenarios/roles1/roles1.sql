@@ -20,6 +20,9 @@ sp_addrolemember 'userrole','alice';
 sp_addrolemember 'userrole','bob';
 GO
 
+sp_addrolemember 'db_datawriter','carol';
+go
+
 create procedure sp_test as 
 select * from sys.all_columns;
 go

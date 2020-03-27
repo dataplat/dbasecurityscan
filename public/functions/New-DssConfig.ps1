@@ -83,10 +83,10 @@ function New-DssConfig {
                     users = $configUser
                     schemas = $configSchema
                     object = $configObject
-        } | ConvertTo-Json -Depth 7
+        } 
 
         if ($ConfigPath -ne ''){
-            $output | Out-File $ConfigPath
+            $output | ConvertTo-Json -Depth 7 | Out-File $ConfigPath
         } else {
             $output
         }
