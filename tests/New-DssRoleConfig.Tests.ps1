@@ -9,14 +9,14 @@ Describe "Unit tests for $commandName" {
 }
 
 Describe "Integration Tests for $commandName" {
-    $config = New-DssRoleConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database roles
+    $config = New-DssRoleConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database roles1
 
     $sConfig = [PsCustomObject]@{
         schemas = $config
     }
 
     It "Should Test db properly" {
-        $pesterOut = Invoke-Pester -Script @{ Path = "$script:appvModuleRoot\Checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $script:appvSqlInstance; Config = $sConfig; SqlCredential = $script:appvSqlCredential; Database = "roles"} } -PassThru
+        $pesterOut = Invoke-Pester -Script @{ Path = "$script:appvModuleRoot\Checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $script:appvSqlInstance; Config = $sConfig; SqlCredential = $script:appvSqlCredential; Database = "roles1"} } -PassThru
         $pesterOut.PassedCount | Should -Be $pesterOut.TotalCount
     }
 }
