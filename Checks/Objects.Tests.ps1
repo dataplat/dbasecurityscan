@@ -6,9 +6,6 @@ param (
     [switch]$IncludeSystemObjects
 )
 
-
-        $output = @()
-
         $dbObjects  = @()
 
         $dbObjects += Get-DbaDbTable -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database | Select-Object Schema, Name

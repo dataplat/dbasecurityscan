@@ -82,7 +82,7 @@ function New-DssConfig {
                     roles = $configRole
                     users = $configUser
                     schemas = $configSchema
-                    object = $configObject
+                    objects = $configObject
         } 
 
         if ($ConfigPath -ne ''){
