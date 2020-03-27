@@ -9,10 +9,10 @@ Describe "Unit tests for $commandName"{
 }
 
 Describe "Integration Tests for $commandName" {
-    $config = New-DssConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database normal1 -UserConfig
+    $config = New-DssUserConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database normal1
 
     It "Should have users" {
-        $config.Users | Should -HaveCount 2
+        $config | Should -HaveCount 2
     }
 
     $pConfig = [PsCustomObject]@{
