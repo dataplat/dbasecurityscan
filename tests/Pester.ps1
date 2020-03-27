@@ -17,8 +17,17 @@ Write-Host "Loading constants"
 
 Write-Host "Building Test Scenarios"
 $sqlInstance = 'localhost\sql2017'
-ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)){
-    (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
+if ($script:IgnoreSQLCMD) {
+    $srv = Connect-DbaInstance -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential
+    ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)) {
+        $c = Get-Content $file -Raw
+        $srv.Databases['master'].ExecuteNonQuery($c)
+        # (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
+    }
+} else {
+    ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)){
+        (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
+    }
 }
 Write-Host "Importing dbaSecurityScans"
 Import-Module "$PSScriptRoot\..\dbaSecurityScan.psd1"

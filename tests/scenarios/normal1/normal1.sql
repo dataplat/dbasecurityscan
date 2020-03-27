@@ -22,7 +22,7 @@ as
 select * from sys.all_columns;
 go
 
-revoke alter on sp_perms to testuser;
+grant alter on sp_perms to testuser;
 go
 
 create view vw_select

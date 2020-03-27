@@ -17,6 +17,8 @@ create role userrole AUTHORIZATION dbo;
 go
 
 sp_addrolemember 'userrole','alice';
+go
+
 sp_addrolemember 'userrole','bob';
 GO
 
