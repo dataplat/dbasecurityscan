@@ -2,6 +2,10 @@
 build: off
 version: 0.0.{build}
 
+image:
+  - Visual Studio 2017
+  - Ubuntu
+
 install:
     - ps: Install-Module Pester -Force -Scope CurrentUser
     - ps: Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
