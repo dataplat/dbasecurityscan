@@ -14,7 +14,7 @@ $sqlSchema = "
             sys.schemas ss inner join sys.database_principals sdp 
                 on ss.principal_id=sdp.principal_id
 "
-$dbSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database "schema1" -Query $sqlSchema 
+$dbSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $sqlSchema 
 
 Foreach ($schema in $config.schemas) {
     Describe "Checking schema $($schema.schemaname)" {
@@ -22,7 +22,7 @@ Foreach ($schema in $config.schemas) {
             ($dbSchema | Where-Object {$_.schemaName -eq $schema.schemaname -and $_.owner -eq $schema.owner} | Measure-Object).count | Should -Be 1
         }
         $checkSql = "select name, type_desc from sys.all_objects where schema_id=SCHEMA_ID('$($schema.schemaname)') and is_ms_shipped=0"
-        $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database "schema1" -Query $checkSql 
+        $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $checkSql 
             
         It "Schema $($schema.schemaname) should contain $($schema.objects.count) Objects" {
             $objectsSchema.count | Should -Be $schema.objects.count -Because "The schema should only contain the specified objects"

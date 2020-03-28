@@ -25,18 +25,19 @@ Function New-DssUserConfig {
     end {
         $output = @()
 
-        $securable = Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database | Where-Object {$_.SourceView -eq 'sys.all_objects' -and $_.GranteeType -eq $_.GranteeType -eq 'SQL_USER'}
-        $roles= Get-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
+        $users = Get-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database 
+        $securable = Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludePublicGuest | Where-Object {$_.SourceView -eq 'sys.all_objects' -and $_.GranteeType -eq $_.GranteeType -eq 'SQL_USER'}
+        $roles= Get-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludeSystemUser
 
-        Foreach ($user in ($securable | Select-Object -unique grantee)){
-            Write-Verbose "working on $user"
-            $role = $roles | Where-Object {$_.Username -eq $user.grantee} | Select-Object -Property role -unique
-            $permissions = $securable | Where-Object {$_.grantee -eq $user.grantee} | Select-Object -Property  schemaowner,securable,permission
-            $output += [PsCustomObject]@{username = $user.Grantee
+        Foreach ($user in ($users)){
+            $role = $roles | Where-Object {$_.Username -eq $user.name} | Select-Object -Property role -unique
+            $permissions = $securable | Where-Object {$_.grantee -eq $user.name} | Select-Object -Property  schemaowner,securable,permission
+            $output += [PsCustomObject]@{username = $user.name
                 permissions = $permissions
                 roles = $role.role
             }
-        }
+        } 
+
     $output
     }
 } 

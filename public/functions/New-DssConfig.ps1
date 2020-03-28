@@ -24,6 +24,9 @@ function New-DssConfig {
     .PARAMETER ConfigPath
         Where to save the generated config, if not specified it will go to STDOUT
 
+    .PARAMETER ExcludeSystemObjects
+        By default the object config does not include system objects. This switch overrides that and returns all objects
+
     .EXAMPLE
         New-DssConfig -SqlInstance local\instance1 -Database db1
 
@@ -48,34 +51,42 @@ function New-DssConfig {
         [switch]$UserConfig,
         [switch]$RoleConfig,
         [switch]$SchemaConfig,
-        [switch]$ObjectConfig
+        [switch]$ObjectConfig,
+        [switch]$IncludeSystemObjects
     )
     begin {}
     process {}
     end {
         $configSwitch = $true
-        # if ($UserConfig -or $SchemaConfig -or $RoleConfig -or $ObjectConfig){
-        #     $configSwitch = $false
-        # }
-        # if ($UserConfig -or $configSwitch) {
+        if ($UserConfig -or $SchemaConfig -or $RoleConfig -or $ObjectConfig){
+            $configSwitch = $false
+        }
+        if ($UserConfig -or $configSwitch) {
+            Write-Verbose -Message "Fetching User config"
             $configUser = New-DssUserConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
-        # } elseif ($RoleConfig -or $configSwitch) {
-        #     $configRole = New-DssRoleConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
-        # } elseif ($SchemaConfig -or $configSwitch) {
+        } 
+        if ($RoleConfig -or $configSwitch) {
+            Write-Verbose -Message "Fetching Role config"
+            $configRole = New-DssRoleConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
+        } 
+        if ($SchemaConfig -or $configSwitch) {
+            Write-Verbose -Message "Fetching Schema config"
             $configSchema = New-DssSchemaConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
-        # } elseif ($ObjectConfig -or $configSwitch) {
-        #     $configObject = New-DSSObjectConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
-        # }
+        } 
+        if ($ObjectConfig -or $configSwitch) {
+            Write-Verbose -Message "Fetching Object config"
+            $configObject = New-DssObjectConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludeSystemObjects:$IncludeSystemObjects
+        }
 
         $output = [PsCustomObject]@{
                     roles = $configRole
                     users = $configUser
                     schemas = $configSchema
-                    object = $configObject
-        } | ConvertTo-Json -Depth 5
+                    objects = $configObject
+        } 
 
         if ($ConfigPath -ne ''){
-            $output | Out-File $ConfigPath
+            $output | ConvertTo-Json -Depth 7 | Out-File $ConfigPath
         } else {
             $output
         }

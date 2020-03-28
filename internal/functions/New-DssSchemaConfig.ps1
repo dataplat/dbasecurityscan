@@ -1,9 +1,9 @@
 function New-DssSchemaConfig {
     <#
     .SYNOPSIS
-        Creates a new user config section for scanning
+        Creates a new schema config section for scanning
 
-        Output dumped to STDOUT 
+        Output passed to STDOUT as PSCustomObject 
     
     .PARAMETER SqlInstance
         SQL Server instance holding the databse to be used as the base for the configuration
@@ -68,7 +68,7 @@ function New-DssSchemaConfig {
         ForEach ($schema in $dbSchema){
 
             $objects = $dbObject | Where-Object {$_.schemaName -eq $schema.schemaName} | Select-Object -Property owner, object
-            $permissions  = $dbPermissions | Where-Object {$_.schemaName -eq $schema.schemaName} | select-Object permission, granteee
+            $permissions  = $dbPermissions | Where-Object {$_.schemaName -eq $schema.schemaName} | Select-Object permission, grantee
             $output +=[PsCustomObject]@{
                 schemaName = $schema.schemaName
                 owner = $schema.owner

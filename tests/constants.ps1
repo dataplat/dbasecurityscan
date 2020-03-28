@@ -6,4 +6,5 @@ if (Test-Path $HOME\dbaSecurityScan-constants.ps1) {
     $script:appvModuleroot = 'c:\github\dbaSecurityScan'
     $script:appvPassword = ConvertTo-SecureString 'Password12!' -AsPlainText -Force
     $script:appvSqlCredential = New-Object System.Management.Automation.PSCredential ('sa', $appvPassword)
+    $script:IgnoreSQLCMD = $false
 }

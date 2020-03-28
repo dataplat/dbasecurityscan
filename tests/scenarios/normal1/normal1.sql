@@ -1,3 +1,9 @@
+if exists (select * from sys.databases where name='normal1')
+BEGIN
+drop database normal1
+END
+GO
+
 create database normal1
 go
 
@@ -22,7 +28,7 @@ as
 select * from sys.all_columns;
 go
 
-grant exec on sp_perms to testuser;
+grant alter on sp_perms to testuser;
 go
 
 create view vw_select
@@ -30,5 +36,14 @@ AS
 select * from sys.all_columns;
 go
 
-grant select on vw_select to READONLY;
-go
+-- grant alter on sp_perms to READONLY;
+-- go
+
+-- create table TIMESTAMP(
+--     col1 int
+-- )
+
+-- select * from sys.all_objects where is_ms_shipped=1 and type_desc='user_table'
+
+-- group by type_desc
+
