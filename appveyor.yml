@@ -25,6 +25,8 @@ environment:
   environment: master
   version: 0.0.$(appveyor_build_number)
   appveyor_rdp_password: h48&jj2)!JHF%d
+  appveyor_ssh_key: 1KRKx0XOGFFarZLu3C4MCosp8AcqsZM7cNby4SWo9OV5fzWFRWo9edyELB4KPVR7MUuja1Ybaydr69AumaZoYDzhggnQH/pQO34Ntos5ZSeg9SVpe5NxzWLcw0pcaO9l
+
 
 services:
   - mssql2017
@@ -42,6 +44,5 @@ test_script:
 
 # on_finish:
 #   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-  - sh: export APPVEYOR_SSH_KEY=1KRKx0XOGFFarZLu3C4MCosp8AcqsZM7cNby4SWo9OV5fzWFRWo9edyELB4KPVR7MUuja1Ybaydr69AumaZoYDzhggnQH/pQO34Ntos5ZSeg9SVpe5NxzWLcw0pcaO9l
   - sh: export APPVEYOR_SSH_BLOCK=true
   - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/sc
