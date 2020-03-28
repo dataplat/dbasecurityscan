@@ -18,7 +18,7 @@ install:
 # - C:\Program Files\WindowsPowerShell\Modules\Pester -> appveyor.yml
 # - C:\Program Files\WindowsPowerShell\Modules\dbatools -> appveyor.yml
 
-clone_folder: c:\github\dbaSecurityScan
+# clone_folder: c:\github\dbaSecurityScan
 clone_depth: 5
 
 environment:
