@@ -2,7 +2,11 @@ if (Test-Path $HOME\dbaSecurityScan-constants.ps1) {
     Write-Verbose "$HOME\dbaSecurityScan-constants.ps1 found."
     . $HOME\dbaSecurityScan-constants.ps1
 } else {
-    $script:appvSqlInstance = "localhost\sql2017"
+    if ($ENV:APPVEYOR -and $IsLinux) { 
+        $script:appvSqlInstance = "localhost"
+    } else {
+        $script:appvSqlInstance = "localhost\sql2017"
+    }
     if ($ENV:APPVEYOR -and $IsLinux) { 
         $script:appvModuleroot = '/home/appveyor/projects/dbasecurityscan/'
     } elseif ($ENV:APPVEYOR -and $IsWindows)  {
