@@ -1,26 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="3" errors="0" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2020-03-27" time="15:01:50">
+<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="3" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2020-03-28" time="11:32:33">
   <environment cwd="/Users/com3mooresm/github/dbaSecurityScan/tests" os-version="18.7.0" clr-version="Unknown" user="com3mooresm" machine-name="CGELAP-MAC08" user-domain="" nunit-version="2.5.8.0" platform="Darwin" />
   <culture-info current-culture="en-GB" current-uiculture="en-GB" />
-  <test-suite type="TestFixture" name="Pester" executed="True" result="Failure" success="False" time="5.5173" asserts="0" description="Pester">
+  <test-suite type="TestFixture" name="Pester" executed="True" result="Success" success="True" time="4.3886" asserts="0" description="Pester">
     <results>
-      <test-suite type="TestFixture" name="/Users/com3mooresm/github/dbaSecurityScan/tests/New-DssUserConfig.Tests.ps1" executed="True" result="Failure" success="False" time="5.5173" asserts="0" description="/Users/com3mooresm/github/dbaSecurityScan/tests/New-DssUserConfig.Tests.ps1">
+      <test-suite type="TestFixture" name="/Users/com3mooresm/github/dbaSecurityScan/tests/New-DssUserConfig.Tests.ps1" executed="True" result="Success" success="True" time="4.3886" asserts="0" description="/Users/com3mooresm/github/dbaSecurityScan/tests/New-DssUserConfig.Tests.ps1">
         <results>
-          <test-suite type="TestFixture" name="Unit tests for New-DssUserConfig" executed="True" result="Success" success="True" time="0.0298" asserts="0" description="Unit tests for New-DssUserConfig">
+          <test-suite type="TestFixture" name="Unit tests for New-DssUserConfig" executed="True" result="Success" success="True" time="0.0322" asserts="0" description="Unit tests for New-DssUserConfig">
             <results>
-              <test-case description="New-DssUserConfig Should Exist" name="Unit tests for New-DssUserConfig.New-DssUserConfig Should Exist" time="0.0122" asserts="0" success="True" result="Success" executed="True" />
+              <test-case description="New-DssUserConfig Should Exist" name="Unit tests for New-DssUserConfig.New-DssUserConfig Should Exist" time="0.0152" asserts="0" success="True" result="Success" executed="True" />
             </results>
           </test-suite>
-          <test-suite type="TestFixture" name="Integration Tests for New-DssUserConfig" executed="True" result="Failure" success="False" time="5.4751" asserts="0" description="Integration Tests for New-DssUserConfig">
+          <test-suite type="TestFixture" name="Integration Tests for New-DssUserConfig" executed="True" result="Success" success="True" time="4.3438" asserts="0" description="Integration Tests for New-DssUserConfig">
             <results>
-              <test-case description="Should have users" name="Integration Tests for New-DssUserConfig.Should have users" time="0.0076" asserts="0" success="False" result="Failure" executed="True">
-                <failure>
-                  <message>Expected 2, but got 1.</message>
-                  <stack-trace>at &lt;ScriptBlock&gt;, /Users/com3mooresm/github/dbaSecurityScan/tests/New-DssUserConfig.Tests.ps1: line 15
-15:         ($config | Measure-Object).count | Should -Be 2</stack-trace>
-                </failure>
-              </test-case>
-              <test-case description="Should Test db properly" name="Integration Tests for New-DssUserConfig.Should Test db properly" time="2.6143" asserts="0" success="True" result="Success" executed="True" />
+              <test-case description="Should have users" name="Integration Tests for New-DssUserConfig.Should have users" time="0.0033" asserts="0" success="True" result="Success" executed="True" />
+              <test-case description="Should Test db properly" name="Integration Tests for New-DssUserConfig.Should Test db properly" time="2.342" asserts="0" success="True" result="Success" executed="True" />
             </results>
           </test-suite>
         </results>

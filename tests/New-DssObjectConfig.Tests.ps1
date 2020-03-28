@@ -9,7 +9,7 @@ Describe "Unit tests for $commandName" {
 }
 
 Describe "Integration Tests for $commandName" {
-    $config = New-DssUserConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database objects1
+    $config = New-DssObjectConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database objects1
 
     It "Should have Objects" {
         ($config | Measure-Object).count | Should -Be 2

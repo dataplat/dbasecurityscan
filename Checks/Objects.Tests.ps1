@@ -11,7 +11,7 @@ param (
         $dbObjects += Get-DbaDbTable -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database | Select-Object Schema, Name
         $dbObjects += Get-DbaDbView -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -ExcludeSystemView:$exclude | Select-Object Schema, Name 
         $dbObjects += Get-DbaDbStoredProcedure -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -ExcludeSystemSp:$exclude | Select-Object Schema, Name
-        $permissions = Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database 
+        $permissions = Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludePublicGuest
     
         Foreach ($object in $config.objects){
             Describe "Checking $($object.object)" {

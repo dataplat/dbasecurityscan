@@ -28,7 +28,7 @@ Foreach ($case in $config.users) {
         }
 
         if ($case.Permissions.Count -ge 1) {
-            $testPermissions =  Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database
+            $testPermissions =  Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -IncludePublicGuest
             # Go through to check the specified permissions are there
             Foreach($permission in $case.Permissions){
                 It "Should have assigned $($case.userName) $($permission.permission) on $($permission.securable)" {

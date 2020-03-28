@@ -1,3 +1,9 @@
+if exists (select * from sys.databases where name='roles1')
+BEGIN
+drop database roles1
+END
+GO
+
 create database roles1
 go
 

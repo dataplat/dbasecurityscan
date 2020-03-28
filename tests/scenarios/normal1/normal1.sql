@@ -1,3 +1,9 @@
+if exists (select * from sys.databases where name='normal1')
+BEGIN
+drop database normal1
+END
+GO
+
 create database normal1
 go
 

@@ -1,3 +1,9 @@
+if exists (select * from sys.databases where name='objects1')
+BEGIN
+drop database objects1
+END
+go
+
 create database objects1
 go
 

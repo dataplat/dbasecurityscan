@@ -59,7 +59,9 @@ foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1" -Re
 }
 
 $testresults | Sort-Object Describe, Context, Name, Result, Message | Format-List
-(New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
+if ($null -ne $env:APPVEYOR_JOB_ID){
+    (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
+}
 if ($totalFailed -gt 0) {
     throw "$totalFailed / $totalRun tests failed"
 }

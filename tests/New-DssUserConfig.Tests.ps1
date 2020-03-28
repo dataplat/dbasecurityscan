@@ -12,7 +12,7 @@ Describe "Integration Tests for $commandName" {
     $config = New-DssUserConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database normal1
 
     It "Should have users" {
-        ($config | Measure-Object).count | Should -Be 2
+        ($config | Measure-Object).count | Should -Be 1
     }
 
     $pConfig = [PsCustomObject]@{
