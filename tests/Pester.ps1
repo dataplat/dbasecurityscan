@@ -41,7 +41,8 @@ $testresults = @()
 Write-Host "Running individual tests"
 foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1" -Recurse)) {
     Write-Host "Executing $($file.Name)"
-    $testResultsFile = ".\TestsResults.xml"
+    $shortName = $file.BaseName.Substring(0,$file.BaseName.Length-5)
+    $testResultsFile = ".\TestsResults-ShortName.xml"
     $results = Invoke-Pester -Script $file.FullName -Show None -PassThru -OutputFormat NUnitXml -OutputFile $testResultsFile
     foreach ($result in $results) {
         $totalRun += $result.TotalCount

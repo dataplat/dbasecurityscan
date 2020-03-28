@@ -3,3 +3,4 @@
 *.psproj
 
 TestResults.xml
+TestResults*.xml
