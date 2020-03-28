@@ -26,7 +26,7 @@ if ($script:IgnoreSQLCMD) {
     }
 } else {
     ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)){
-        (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
+        (& sqlcmd -S "$script:appvSqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
     }
 }
 Write-Host "Importing dbaSecurityScans"
