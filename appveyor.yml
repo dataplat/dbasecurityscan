@@ -25,7 +25,7 @@ environment:
   environment: master
   version: 0.0.$(appveyor_build_number)
   appveyor_rdp_password: h48&jj2)!JHF%d
-  appveyor_ssh_key: AAAAB3NzaC1yc2EAAAADAQABAAABAQDLXGuf/QKmv1UQSgOKI5xV3F4Xk7QukZNcrUxIriRQJVT5msHUYkJdXFt4+1KRKx0XOGFFarZLu3C4MCosp8AcqsZM7cNby4SWo9OV5fzWFRWo9edyELB4KPVR7MUuja1Ybaydr69AumaZoYDzhggnQH/pQO34Ntos5ZSeg9SVpe5NxzWLcw0pcaO9l+XxhiFIzRUdKaqVeN8yN7RkGVoz5ydQjswoEGa/xSt+l+oJxjsGUPBcrrpUgZh4Sh+EEkvfPuU5I88aPkO02LryJJj9SFHYwodzXQ+GsofP7vxl/KhiROa7kVys7I8gWy0A1wEjS+fDCFw0USrLck9w6oeN
+  appveyor_ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLXGuf/QKmv1UQSgOKI5xV3F4Xk7QukZNcrUxIriRQJVT5msHUYkJdXFt4+1KRKx0XOGFFarZLu3C4MCosp8AcqsZM7cNby4SWo9OV5fzWFRWo9edyELB4KPVR7MUuja1Ybaydr69AumaZoYDzhggnQH/pQO34Ntos5ZSeg9SVpe5NxzWLcw0pcaO9l+XxhiFIzRUdKaqVeN8yN7RkGVoz5ydQjswoEGa/xSt+l+oJxjsGUPBcrrpUgZh4Sh+EEkvfPuU5I88aPkO02LryJJj9SFHYwodzXQ+GsofP7vxl/KhiROa7kVys7I8gWy0A1wEjS+fDCFw0USrLck9w6oeN
   
 
 services:
@@ -43,6 +43,6 @@ test_script:
 - ps: .\build\appveyor.pester.ps1
 
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-# - sh: export APPVEYOR_SSH_BLOCK=true
-# - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/sc
+# - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- sh: export APPVEYOR_SSH_BLOCK=true
+- sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
