@@ -17,7 +17,8 @@ install:
 # - C:\Program Files\WindowsPowerShell\Modules\PSScriptAnalyzer -> appveyor.yml
 # - C:\Program Files\WindowsPowerShell\Modules\Pester -> appveyor.yml
 # - C:\Program Files\WindowsPowerShell\Modules\dbatools -> appveyor.yml
-
+- sh: export APPVEYOR_SSH_BLOCK=true
+- sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 # clone_folder: c:\github\dbaSecurityScan
 clone_depth: 5
 
@@ -42,5 +43,3 @@ test_script:
 
 on_finish:
 # - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-- sh: export APPVEYOR_SSH_BLOCK=true
-- sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
