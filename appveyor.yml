@@ -36,8 +36,8 @@ services:
 
 test_script:
 # Test with PowerShell and Pester
-- sh: export APPVEYOR_SSH_BLOCK=true
-- sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+# - sh: export APPVEYOR_SSH_BLOCK=true
+# - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 - ps: .\build\appveyor.pester.ps1
 
 on_finish:
