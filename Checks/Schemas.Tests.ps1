@@ -24,7 +24,7 @@ Foreach ($schema in $config.schemas) {
         $checkSql = "select name, type_desc from sys.all_objects where schema_id=SCHEMA_ID('$($schema.schemaname)') and is_ms_shipped=0"
         $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $checkSql 
             
-        It "Schema $($schema.schemaname) should contain $($schema.objects.count) Objects" {
+        It "Schema $($schema.schemaname) should contain $($schema.objects) Objects" {
             $objectsSchema.count | Should -Be $schema.objects.count -Because "The schema should only contain the specified objects"
         }
 
