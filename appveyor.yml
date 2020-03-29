@@ -31,8 +31,6 @@ environment:
 services:
   - mssql2017
 
-       
-
 # build_script:
 # # grab appveyor lab files and needed requirements for tests in CI
 # - ps: .\build\appveyor.prep.ps1
