@@ -34,6 +34,9 @@ services:
 # - ps: .\build\appveyor.prep.ps1
 # - ps: .\tests\appveyor.SQL2017.ps1
 
+before_test:
+  - sh: ./tests/pwsh7.sh
+
 test_script:
 # Test with PowerShell and Pester
 # - sh: export APPVEYOR_SSH_BLOCK=true
