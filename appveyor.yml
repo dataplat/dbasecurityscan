@@ -35,7 +35,8 @@ services:
 # - ps: .\tests\appveyor.SQL2017.ps1
 
 before_test:
-  - sh: ./tests/pwsh7.sh
+  - sh: chmod a+x /home/appveyor/projects/dbasecurityscan/tests/pwsh7.sh
+  - sh: /home/appveyor/projects/dbasecurityscan/tests/pwsh7.sh
 
 test_script:
 # Test with PowerShell and Pester
