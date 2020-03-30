@@ -29,6 +29,7 @@ before_intall:
   - docker run -e "ACCEPT_EULA=Y" -e 'SA_PASSWORD=P@$sw0rdling' -p 1433:1433 --name sql2019 -d mcr.microsoft.com/mssql/server:2019-latest
   - docker ps -a
   - docker start sql2019
+  
 
 # install:
 #   - pwsh -f "${env:TRAVIS_BUILD_DIR}/install-dependencies.ps1"
