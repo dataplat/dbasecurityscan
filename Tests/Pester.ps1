@@ -3,13 +3,19 @@ param (
 )
 
 Write-Host "Starting Tests" -ForegroundColor Green
-if ($env:BUILD_BUILDURI -like "vstfs*") {
+if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
     Write-Host "Installing Pester" -ForegroundColor Cyan
     Install-Module Pester -Force -SkipPublisherCheck
     Write-Host "Installing PSFramework" -ForegroundColor Cyan
     Install-Module PSFramework -Force -SkipPublisherCheck
     Write-Host "Installing dbatools" -ForegroundColor Cyan
-    Install-Module dbatools -Force
+    Install-Module dbatools -Force -SkipPublisherCheck
+    Write-Host "Installing PSScriptAnalyzer" -ForegroundColor Cyan
+    Install-DbaFirstResponderKit§ PSScriptAnalyzer -Force -SkipPublisherCheck
+    Import-Module dbatools
+    Import-Module Pester
+    Import-Module PsFramework
+    Import-Module PSScriptAnalyzer
 }
 
 Write-Host "Loading constants"
@@ -17,16 +23,18 @@ Write-Host "Loading constants"
 
 Write-Host "Building Test Scenarios"
 $sqlInstance = 'localhost\sql2017'
+#Linux instance slow to start mssql, so:
+Start-Sleep -Seconds 60
 if ($script:IgnoreSQLCMD) {
     $srv = Connect-DbaInstance -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential
     ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)) {
-        $c = Get-Content $file -Raw
+        $c = Get-Content $file.FullName -Raw
         $srv.Databases['master'].ExecuteNonQuery($c)
         # (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
     }
 } else {
     ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)){
-        (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
+        (& sqlcmd -S "$script:appvSqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
     }
 }
 Write-Host "Importing dbaSecurityScans"
@@ -39,7 +47,8 @@ $testresults = @()
 Write-Host "Running individual tests"
 foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1" -Recurse)) {
     Write-Host "Executing $($file.Name)"
-    $testResultsFile = ".\TestsResults.xml"
+    $shortName = $file.BaseName.Substring(0,$file.BaseName.Length-6)
+    $testResultsFile = ".\TestsResults-$ShortName.xml"
     $results = Invoke-Pester -Script $file.FullName -Show None -PassThru -OutputFormat NUnitXml -OutputFile $testResultsFile
     foreach ($result in $results) {
         $totalRun += $result.TotalCount

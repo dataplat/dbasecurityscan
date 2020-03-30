@@ -1,0 +1,6 @@
+# ignore the settings folder and files for VSCode
+.vscode/*
+*.psproj
+
+TestResults.xml
+TestResults*.xml

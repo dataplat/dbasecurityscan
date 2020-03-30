@@ -2,6 +2,10 @@
 build: off
 version: 0.0.{build}
 
+image:
+  - Visual Studio 2017
+  # - Ubuntu
+
 install:
     - ps: Install-Module Pester -Force -Scope CurrentUser
     - ps: Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
@@ -13,8 +17,7 @@ install:
 # - C:\Program Files\WindowsPowerShell\Modules\PSScriptAnalyzer -> appveyor.yml
 # - C:\Program Files\WindowsPowerShell\Modules\Pester -> appveyor.yml
 # - C:\Program Files\WindowsPowerShell\Modules\dbatools -> appveyor.yml
-
-clone_folder: c:\github\dbaSecurityScan
+# clone_folder: c:\github\dbaSecurityScan
 clone_depth: 5
 
 environment:
@@ -25,16 +28,16 @@ environment:
 services:
   - mssql2017
 
-       
-
 # build_script:
 # # grab appveyor lab files and needed requirements for tests in CI
 # - ps: .\build\appveyor.prep.ps1
 # - ps: .\tests\appveyor.SQL2017.ps1
 
+# before_test:
+
 test_script:
 # Test with PowerShell and Pester
 - ps: .\build\appveyor.pester.ps1
 
-# on_finish:
-#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+# - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
