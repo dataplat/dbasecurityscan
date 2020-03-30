@@ -4,7 +4,7 @@ version: 0.0.{build}
 
 image:
   - Visual Studio 2017
-  - Ubuntu
+  # - Ubuntu
 
 install:
     - ps: Install-Module Pester -Force -Scope CurrentUser
@@ -34,9 +34,9 @@ services:
 # - ps: .\build\appveyor.prep.ps1
 # - ps: .\tests\appveyor.SQL2017.ps1
 
-before_test:
-  - sh: chmod a+x /home/appveyor/projects/dbasecurityscan/tests/pwsh7.sh
-  - sh: /home/appveyor/projects/dbasecurityscan/tests/pwsh7.sh
+# before_test:
+#   - sh: chmod a+x /home/appveyor/projects/dbasecurityscan/tests/pwsh7.sh
+#   - sh: /home/appveyor/projects/dbasecurityscan/tests/pwsh7.sh
 
 test_script:
 # Test with PowerShell and Pester
