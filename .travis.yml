@@ -1,0 +1,38 @@
+language: generic
+
+services: docker
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      sudo: false
+      addons:
+        apt:
+          sources:
+            - sourceline: "deb [arch=amd64] https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb "
+              key_url: "https://packages.microsoft.com/keys/microsoft.asc"
+          packages:
+            - powershell
+    # - os: osx
+    #   osx_image: xcode9.1
+    #   before_install:
+    #     - brew tap caskroom/cask
+    #     - brew cask install powershell
+  fast_finish: true
+  
+before_intall:
+  - docker run -e "ACCEPT_EULA=Y" -e 'SA_PASSWORD=P@$sw0rdling' -p 1433:1433 --name sql2019 -d mcr.microsoft.com/mssql/server:2019-latest
+  - docker ps -a
+  - docker start sql2019
+
+# install:
+#   - pwsh -f "${env:TRAVIS_BUILD_DIR}/install-dependencies.ps1"
+
+# before_script:
+#   - pwsh -f "${env:TRAVIS_BUILD_DIR}/build.ps1"
+
+script:
+  - pwsh -f "${env:TRAVIS_BUILD_DIR}/tests/Pester.ps1"
+
+# after_success:
+#   - pwsh -f "${env:TRAVIS_BUILD_DIR}/deploy.ps1"
