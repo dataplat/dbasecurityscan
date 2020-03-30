@@ -29,7 +29,6 @@ before_intall:
   - docker run -e "ACCEPT_EULA=Y" -e 'SA_PASSWORD=P@$sw0rdling' -p 1433:1433 --name sql2019 -d mcr.microsoft.com/mssql/server:2019-latest
   - docker ps -a
   - docker start sql2019
-  - find / -name appveyor.yml -ls 
 
 # install:
 #   - pwsh -f "${env:TRAVIS_BUILD_DIR}/install-dependencies.ps1"
@@ -38,7 +37,7 @@ before_intall:
 #   - pwsh -f "${env:TRAVIS_BUILD_DIR}/build.ps1"
 
 script:
-  - pwsh -f "${env:TRAVIS_BUILD_DIR}/Stuart-Moore/dbaSecurityScan/Tests/Pester.ps1"
+  - pwsh -f "/home/travis/build/Stuart-Moore/dbaSecurityScan/Tests/Pester.ps1"
 
 # after_success:
 #   - pwsh -f "${env:TRAVIS_BUILD_DIR}/deploy.ps1"
