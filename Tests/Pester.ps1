@@ -11,7 +11,7 @@ Write-Host "Starting Tests" -ForegroundColor Green
     Write-Host "Installing dbatools" -ForegroundColor Cyan
     Install-Module dbatools -Force -SkipPublisherCheck
     Write-Host "Installing PSScriptAnalyzer" -ForegroundColor Cyan
-    Install-DbaFirstResponderKit§ PSScriptAnalyzer -Force -SkipPublisherCheck
+    Install-Module PSScriptAnalyzer -Force -SkipPublisherCheck
     Import-Module dbatools
     Import-Module Pester
     Import-Module PsFramework
