@@ -3,7 +3,7 @@ param (
 )
 
 Write-Host "Starting Tests" -ForegroundColor Green
-if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
+# if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
     Write-Host "Installing Pester" -ForegroundColor Cyan
     Install-Module Pester -Force -SkipPublisherCheck
     Write-Host "Installing PSFramework" -ForegroundColor Cyan
@@ -16,7 +16,7 @@ if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
     Import-Module Pester
     Import-Module PsFramework
     Import-Module PSScriptAnalyzer
-}
+# }
 
 Write-Host "Loading constants"
 . "$PSScriptRoot\constants.ps1"
