@@ -17,6 +17,20 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        #
+        ports:
+          # Opens tcp port 6379 on the host and service container
+          - 1433:1433
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: P@$sw0rdling
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
