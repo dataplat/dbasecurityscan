@@ -41,7 +41,7 @@ jobs:
       run: pwsh -c "write-host 'test'"
 
     - name: run  a one liner
-      run: pwsh -c "docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=P@$sw0rdling' -p 1433:1433 --name sql2019 -d mcr.microsoft.com/mssql/server:2019-latest"
+      run: pwsh -c "docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=P@$sw0rdling' -p 1433:1433 --name sql2019 -d microsoft/mssql-server-windows-developer"
 
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
