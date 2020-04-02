@@ -17,19 +17,19 @@ jobs:
     # The type of runner that the job will run on
     runs-on: macos-latest
 
-    # Service containers to run with `runner-job`
-    services:
-      # Label used to access the service container
-      redis:
-        # Docker Hub image
-        image: mcr.microsoft.com/mssql/server:2019-latest
-        #
-        ports:
-          # Opens tcp port 6379 on the host and service container
-          - 1433:1433
-        env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: P@$sw0rdling
+    # # Service containers to run with `runner-job`
+    # services:
+    #   # Label used to access the service container
+    #   redis:
+    #     # Docker Hub image
+    #     image: mcr.microsoft.com/mssql/server:2019-latest
+    #     #
+    #     ports:
+    #       # Opens tcp port 6379 on the host and service container
+    #       - 1433:1433
+    #     env:
+    #       ACCEPT_EULA: Y
+    #       SA_PASSWORD: P@$sw0rdling
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -39,6 +39,9 @@ jobs:
     # Runs a single command using the runners shell
     - name: Run a one-line script
       run: pwsh -c "write-host 'test'"
+
+    - name: run  a one liner
+      run: pwsh -c "docker run -e -ACCEPT_EULA=Y' -e 'SA_PASSWORD=P@$sw0rdling' -p 1433:1433 --name sql2019 -d mcr.microsoft.com/mssql/server:2019-latest"
 
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
