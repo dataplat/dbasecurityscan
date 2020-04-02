@@ -28,6 +28,7 @@ Start-Sleep -Seconds 60
 if ($script:IgnoreSQLCMD) {
     $srv = Connect-DbaInstance -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential
     ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)) {
+        Write-Host "Setting up $($file.name)"
         $c = Get-Content $file.FullName -Raw
         $srv.Databases['master'].ExecuteNonQuery($c)
         # (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")
