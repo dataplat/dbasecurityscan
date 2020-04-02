@@ -3,7 +3,7 @@ if (Test-Path $HOME\dbaSecurityScan-constants.ps1) {
     . $HOME\dbaSecurityScan-constants.ps1
 } else {
     if ($ENV:APPVEYOR -and $IsLinux) { 
-        $script:appvSqlInstance = "localhost"
+        $script:appvSqlInstance = "localhostSQL2019"
     } else {
         $script:appvSqlInstance = "localhost\SQL2019"
     }
