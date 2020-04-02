@@ -38,7 +38,7 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Run a one-line script
-      run: powershelel -c "Get-Service | Where-Object {$_.name -like '*sql*' -and $_.status -ne 'Running'} | start-service"
+      run: powershell -c "Get-Service | Where-Object {$_.name -like '*sql*' -and $_.status -ne 'Running'} | start-service"
 
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
