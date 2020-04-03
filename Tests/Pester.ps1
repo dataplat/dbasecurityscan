@@ -26,7 +26,15 @@ $sqlInstance = 'localhost\sql2017'
 #Linux instance slow to start mssql, so:
 Start-Sleep -Seconds 60
 if ($script:IgnoreSQLCMD) {
-    $srv = Connect-DbaInstance -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential
+    try {
+        $error.clear
+        $srv = Connect-DbaInstance -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential
+    }
+    catch {
+        foreach ($e in $error) {
+            $e | Select-Object * 
+        }
+    }
     ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)) {
         Write-Host "Setting up $($file.name)"
         $c = Get-Content $file.FullName -Raw
