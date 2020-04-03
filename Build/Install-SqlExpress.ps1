@@ -2,7 +2,7 @@
 ##  File:  Install-SQLExpress.ps1
 ##  Desc:  Install SQL Express for Windows
 ################################################################################
-Import-Module -Name ImageHelpers -Force;
+. ./Build/InstallHelpers.ps1
 
 function Download-FullSQLPackage {
     param(
