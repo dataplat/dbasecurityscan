@@ -20,7 +20,7 @@ Describe "Integration Tests for $commandName" {
     }
 
     It "Should Test db properly" {
-        $pesterOut = Invoke-Pester -Script @{ Path = "$script:appvModuleRoot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $script:appvSqlInstance; Config = $pConfig; SqlCredential = $script:appvSqlCredential; Database = "objects1"} } -PassThru
+        $pesterOut = Invoke-Pester -Script @{ Path = "$PSScriptRoot\..\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $script:appvSqlInstance; Config = $pConfig; SqlCredential = $script:appvSqlCredential; Database = "objects1"} } -PassThru
         $pesterOut.PassedCount | Should -Be $pesterOut.TotalCount
     }
 }

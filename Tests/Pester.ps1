@@ -3,7 +3,7 @@ param (
 )
 
 Write-Host "Starting Tests" -ForegroundColor Green
-if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
+# if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
     Write-Host "Installing Pester" -ForegroundColor Cyan
     Install-Module Pester -Force -SkipPublisherCheck
     Write-Host "Installing PSFramework" -ForegroundColor Cyan
@@ -11,23 +11,31 @@ if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
     Write-Host "Installing dbatools" -ForegroundColor Cyan
     Install-Module dbatools -Force -SkipPublisherCheck
     Write-Host "Installing PSScriptAnalyzer" -ForegroundColor Cyan
-    Install-DbaFirstResponderKit§ PSScriptAnalyzer -Force -SkipPublisherCheck
+    Install-Module PSScriptAnalyzer -Force -SkipPublisherCheck
     Import-Module dbatools
     Import-Module Pester
     Import-Module PsFramework
     Import-Module PSScriptAnalyzer
-}
+# }
 
 Write-Host "Loading constants"
 . "$PSScriptRoot\constants.ps1"
 
 Write-Host "Building Test Scenarios"
-$sqlInstance = 'localhost\sql2017'
-#Linux instance slow to start mssql, so:
-Start-Sleep -Seconds 60
+#instance slow to start mssql, so:
+Start-Sleep -Seconds 30
 if ($script:IgnoreSQLCMD) {
-    $srv = Connect-DbaInstance -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential
+    try {
+        $error.clear
+        $srv = Connect-DbaInstance -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential
+    }
+    catch {
+        foreach ($e in $error) {
+            $e | Select-Object * 
+        }
+    }
     ForEach ($file in (Get-ChildItem "$PSScriptRoot\scenarios" -File -Filter "*.sql" -recurse)) {
+        Write-Host "Setting up $($file.name)"
         $c = Get-Content $file.FullName -Raw
         $srv.Databases['master'].ExecuteNonQuery($c)
         # (& sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -b -i "$($file.fullname)" -d "master")

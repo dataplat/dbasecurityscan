@@ -1,6 +1,10 @@
 # dbaSecurityScan
 
-[![Build status](https://ci.appveyor.com/api/projects/status/74nvvgd7yqxb7l70?svg=true)](https://ci.appveyor.com/project/Stuart-Moore/dbasecurityscan)
+## Module Status
+
+| Win + WinPS | Win + PS7 | Linux + PS7 |
+|---|---|---|
+| ![Windows + Ps7](https://github.com/sqlcollaborative/dbasecurityscan/workflows/CI/badge.svg) | ![WindowsPS](https://github.com/sqlcollaborative/dbasecurityscan/workflows/WindowsPS/badge.svg) | ![LinuxPS](https://github.com/sqlcollaborative/dbasecurityscan/workflows/LinuxPS/badge.svg)
 
 ## Introduction
 
