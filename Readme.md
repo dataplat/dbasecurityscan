@@ -1,6 +1,7 @@
 # dbaSecurityScan
 
-![Windows CI](https://github.com/sqlcollaborative/dbasecurityscan/workflows/CI/badge.svg)
+![Windows + Ps7](https://github.com/sqlcollaborative/dbasecurityscan/workflows/CI/badge.svg?branch=development)
+![WindowsPS](https://github.com/sqlcollaborative/dbasecurityscan/workflows/WindowsPS/badge.svg?branch=development)
 
 ## Introduction
 
