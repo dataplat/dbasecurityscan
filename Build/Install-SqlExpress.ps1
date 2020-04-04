@@ -43,7 +43,7 @@ function Unpack-SQLInstaller {
 function Start-Installer {
     param(
         [String]$InstallerPath,
-        [String]$Arguments = ("/Q", "/IACCEPTSQLSERVERLICENSETERMS", "/Action=Install", "/INSTANCEID=SQL2019", "/INSTANCENAME=SQL2019", "/SECURITYMODE=SQL", "/SAPWD=P@ssword!!", "/TCPENABLED=1")
+        [String]$Arguments = ("/Q", "/IACCEPTSQLSERVERLICENSETERMS", "/Action=Install", "/INSTANCEID=SQL2019", "/INSTANCENAME=SQL2019", "/SECURITYMODE=SQL", "/SAPWD=P@ssw0rdl!ng", "/TCPENABLED=1")
     )
     Write-Host "Installating SQL Express..."
     $process = Start-Process -FilePath $InstallerPath -ArgumentList $Arguments -Wait -PassThru
