@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="2" errors="0" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2020-04-04" time="20:56:11">
+  <environment cwd="/Users/com3mooresm/github/dbaSecurityScan" os-version="18.7.0" clr-version="Unknown" user="com3mooresm" machine-name="CGELAP-MAC08" user-domain="" nunit-version="2.5.8.0" platform="Darwin" />
+  <culture-info current-culture="en-GB" current-uiculture="en-GB" />
+  <test-suite type="TestFixture" name="Pester" executed="True" result="Failure" success="False" time="36.7591" asserts="0" description="Pester">
+    <results>
+      <test-suite type="TestFixture" name="/Users/com3mooresm/github/dbaSecurityScan/Tests/New-DssObjectConfig.Tests.ps1" executed="True" result="Failure" success="False" time="36.7591" asserts="0" description="/Users/com3mooresm/github/dbaSecurityScan/Tests/New-DssObjectConfig.Tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Unit tests for New-DssObjectConfig" executed="True" result="Success" success="True" time="0.047" asserts="0" description="Unit tests for New-DssObjectConfig">
+            <results>
+              <test-case description="New-DssObjectConfig Should Exist" name="Unit tests for New-DssObjectConfig.New-DssObjectConfig Should Exist" time="0.0117" asserts="0" success="True" result="Success" executed="True" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="Integration Tests for New-DssObjectConfig" executed="True" result="Failure" success="False" time="36.6968" asserts="0" description="Integration Tests for New-DssObjectConfig">
+            <results>
+              <test-case description="Error occurred in Describe block" name="Integration Tests for New-DssObjectConfig.Error occurred in Describe block" time="0" asserts="0" success="False" result="Failure" executed="True">
+                <failure>
+                  <message>Exception calling "ReadAllText" with "1" argument(s): "Could not find a part of the path '/Users/com3mooresm/.local/share/powershell/Modules/dbatools/1.0.103/bin/stig.sql'."</message>
+                  <stack-trace>At line:43 char:24</stack-trace>
+                </failure>
+              </test-case>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
