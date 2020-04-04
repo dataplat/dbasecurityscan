@@ -7,7 +7,7 @@ if (Test-Path $HOME\dbaSecurityScan-constants.ps1) {
     } elseif ($ENV:APPVEYOR) {
         $script:appvModuleroot = 'C:\projects\dbasecurityscan\'
     } elseif ($IsLinux) {
-        $script:appvSqlInstance = "localhost:1433\SQL2019"
+        $script:appvSqlInstance = "localhost:1433"
     } else {
         $script:appvModuleroot = 'c:\github\dbasecurityscan'
         $script:appvSqlInstance = "localhost\SQL2019"

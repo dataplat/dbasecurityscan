@@ -42,5 +42,7 @@ jobs:
     - name: Run a multi-line script
       run : |
         cd $GITHUB_WORKSPACE
+        ls -lrt
+        pwd
         pwsh -F ./Tests/Pester.ps1
         
