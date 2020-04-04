@@ -13,7 +13,7 @@ if (Test-Path $HOME\dbaSecurityScan-constants.ps1) {
         $script:appvSqlInstance = "localhost\SQL2019"
     }
 
-    $script:appvPassword = ConvertTo-SecureString 'P@$sw0rdling' -AsPlainText -Force
+    $script:appvPassword = ConvertTo-SecureString 'P@ssw0rdl!ng' -AsPlainText -Force
     $script:appvSqlCredential = New-Object System.Management.Automation.PSCredential ('sa', $appvPassword)
     $script:IgnoreSQLCMD = $true
 }

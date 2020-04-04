@@ -26,11 +26,11 @@ function Import-ModuleFile {
 $script:doDotSource = $false
 
 # Import all internal functions
-foreach ($function in (Get-ChildItem "$ModuleRoot\internal\functions\*.ps1")) {
+foreach ($function in (Get-ChildItem "$script:ModuleRoot\internal\functions\*.ps1")) {
     . Import-ModuleFile -Path $function.FullName
 }
 
 # Import all public functions
-foreach ($function in (Get-ChildItem "$ModuleRoot\public\functions\*.ps1")) {
+foreach ($function in (Get-ChildItem "$script:ModuleRoot\public\functions\*.ps1")) {
     . Import-ModuleFile -Path $function.FullName
 }
