@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: WindowsPS
+name: LinuxPS
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -34,10 +34,6 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: powershell -c 'Get-Service | Where-Object {$_.name -like ''*sql*'' -and $_.status -ne ''Running''} | start-service'
     
     - name: Install SQL Express
       run: powershell -F ./Build/Install-SqlExpress.ps1
