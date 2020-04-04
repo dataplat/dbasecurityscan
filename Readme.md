@@ -1,6 +1,6 @@
 # dbaSecurityScan
 
-[![Build status](https://ci.appveyor.com/api/projects/status/74nvvgd7yqxb7l70?svg=true)](https://ci.appveyor.com/project/Stuart-Moore/dbasecurityscan)
+![Windows CI](https://github.com/sqlcollaborative/dbasecurityscan/workflows/CI/badge.svg)
 
 ## Introduction
 
