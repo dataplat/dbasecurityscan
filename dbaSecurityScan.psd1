@@ -27,7 +27,7 @@ Author = 'Stuart Moore'
 CompanyName = 'Stuart Moore'
 
 # Copyright statement for this module
-Copyright = '(c)2020 Stuart Moore. All rights reserved.'
+Copyright     = '(c)2020 Stuart Moore, licensed under MIT'
 
 # Description of the functionality provided by this module
 Description = 'Security Compliance checking for SQL Server'
@@ -99,7 +99,7 @@ PrivateData = @{
         Tags = 'SQLServer,sql,dba,security,linux,core,database'
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://opensource.org/licenses/MIT'
 
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/sqlcollaborative/dbasecurityscan/'
@@ -111,7 +111,7 @@ PrivateData = @{
         # ReleaseNotes = ''
 
         # Prerelease string of this module
-        # Prerelease = ''
+        Prerelease = 'True'
 
         # Flag to indicate whether the module requires explicit user acceptance for install/update/save
         # RequireLicenseAcceptance = $false
