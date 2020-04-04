@@ -1,6 +1,6 @@
 $commandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 Write-host "importing $PSScriptRoot/constants.ps1 "
-. "$PSScriptRoot/constants.ps1"
+. "$PSScriptRoot\constants.ps1"
 
 Describe "Unit tests for $commandName"{
     It "$commandName Should Exist" {
@@ -21,6 +21,7 @@ Describe "Integration Tests for $commandName" {
 
     It "Should Test db properly" {
         $pesterOut = Invoke-Pester -Script @{ Path = "$PSScriptRoot\..\Checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $script:appvSqlInstance; Config = $pConfig; SqlCredential = $script:appvSqlCredential; Database = "normal1"} } -PassThru
+        $pesterOut
         $pesterOut.PassedCount | Should -Be $pesterOut.TotalCount
     }
 }
