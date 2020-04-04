@@ -22,9 +22,8 @@ Write-Host "Loading constants"
 . "$PSScriptRoot\constants.ps1"
 
 Write-Host "Building Test Scenarios"
-$sqlInstance = 'localhost\sql2017'
-#Linux instance slow to start mssql, so:
-Start-Sleep -Seconds 60
+#instance slow to start mssql, so:
+Start-Sleep -Seconds 30
 if ($script:IgnoreSQLCMD) {
     try {
         $error.clear

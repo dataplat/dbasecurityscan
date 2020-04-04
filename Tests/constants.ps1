@@ -6,11 +6,14 @@ if (Test-Path $HOME\dbaSecurityScan-constants.ps1) {
         $script:appvModuleroot = '/home/appveyor/projects/dbasecurityscan/'
     } elseif ($ENV:APPVEYOR) {
         $script:appvModuleroot = 'C:\projects\dbasecurityscan\'
-    } else {
+    } elseif ($IsLinux) {
+        $script:appvSqlInstance = "localhost:1433\SQL2019"
+    } else[
         $script:appvModuleroot = 'c:\github\dbasecurityscan'
-    }
-    $script:appvSqlInstance = "localhost\SQL2019"
-    $script:appvPassword = ConvertTo-SecureString 'P@ssword!!' -AsPlainText -Force
+        $script:appvSqlInstance = "localhost\SQL2019"
+    ]
+
+    $script:appvPassword = ConvertTo-SecureString 'P@$sw0rdling' -AsPlainText -Force
     $script:appvSqlCredential = New-Object System.Management.Automation.PSCredential ('sa', $appvPassword)
     $script:IgnoreSQLCMD = $true
 }
