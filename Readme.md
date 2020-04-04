@@ -1,8 +1,10 @@
 # dbaSecurityScan
 
-Windows + Ps7 - ![Windows + Ps7](https://github.com/sqlcollaborative/dbasecurityscan/workflows/CI/badge.svg?branch=development)
+## Module Status
 
-WindowsPS - ![WindowsPS](https://github.com/sqlcollaborative/dbasecurityscan/workflows/WindowsPS/badge.svg?branch=development)
+| Win + WinPS | Win + PS7 | Linux + PS7 |
+|---|---|---|
+| ![Windows + Ps7](https://github.com/sqlcollaborative/dbasecurityscan/workflows/CI/badge.svg) | ![WindowsPS](https://github.com/sqlcollaborative/dbasecurityscan/workflows/WindowsPS/badge.svg) | ![LinuxPS](https://github.com/sqlcollaborative/dbasecurityscan/workflows/LinuxPS/badge.svg)
 
 ## Introduction
 
