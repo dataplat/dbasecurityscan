@@ -23,7 +23,7 @@ function Import-ModuleFile {
 }
 
 # Detect whether at some level dotsourcing was enforced
-$script:doDotSource = $false
+$script:doDotSource = $true
 
 # Import all internal functions
 foreach ($function in (Get-ChildItem ".\Internal\functions\*.ps1")) {
@@ -32,5 +32,6 @@ foreach ($function in (Get-ChildItem ".\Internal\functions\*.ps1")) {
 
 # Import all public functions
 foreach ($function in (Get-ChildItem ".\Public\functions\*.ps1")) {
-    . Import-ModuleFile -Path $function.FullName
+    # . Import-ModuleFile -Path $function.FullName
+    . $function.fullname
 }
