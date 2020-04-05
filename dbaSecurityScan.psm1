@@ -3,6 +3,7 @@ $PSModuleRoot = $PSScriptRoot
 $script:PSModuleRoot = $PSScriptRoot
 $VerbosePreference = "Continue"
 
+$script:dssModuleRoot = $PSScriptRoot
 Write-verbose "$PSModuleRoot"
 function Import-ModuleFile {
     [CmdletBinding()]
