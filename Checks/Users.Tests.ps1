@@ -58,4 +58,3 @@ Describe "Test databse against config" {
         }
     }
 }
-
