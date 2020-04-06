@@ -32,7 +32,7 @@ Describe "Test config against database" {
                 $testPermissions =  Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -IncludePublicGuest
                 # Go through to check the specified permissions are there
                 Foreach($permission in $case.Permissions){
-                    It "Should have assigned $($case.userName) $($permission.permission) on $($permission.securable)" {
+                    It "Should have assigned $($case.userName) permission $($permission.permission) on $($permission.securable)" {
                         ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -eq $permission.securable -and $_.permission -eq $permission.permission} | Measure-Object).count | Should -Be 1
                     }
 
@@ -51,7 +51,7 @@ Describe "Test config against database" {
 
 Describe "Test databse against config" {
     Context "Checking for no extra objects" {
-        ForEach ($user in $dbUsers){
+        ForEach ($user in $dbUsers) {
             It "Database user $($user.name) should be in config" {
                 $user.name -in $config.users.username | Should -Be True
             }
