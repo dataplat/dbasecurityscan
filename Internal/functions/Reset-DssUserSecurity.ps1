@@ -39,9 +39,9 @@ Function Reset-DssUserSecurity {
     end {
         $errors = $TestResult.UsersResults.TestResult | Where-Object {$_.Result -eq 'Failed'}
         ForEach ($err in $errors){
-            write-verbose "in loop"
+            write-verbose "$($err.name)"
             if ($err.Name -match 'Database user (.*) should be in config') {
-                write-verbose "match"
+                write-verbose "additional user $($Matches[1])"
                 if ($IsWindows) {
                     Remove-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $Matches[1] -Confirm:$false -ErrorAction SilentlyContinue
                 } else {
