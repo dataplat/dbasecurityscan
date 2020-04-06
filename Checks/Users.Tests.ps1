@@ -17,7 +17,7 @@ Describe "Test config against database" {
             if ($case.roles.count -gt 0){
                 Foreach ($role in $case.roles){
                     It "$($case.username) should be a member of $role (Config)" {
-                        $role | Should -BeIn $dbUserRoles.Role
+                        $role | Should -BeIn ($dbUserRoles | Where-Object {$_.Username -eq $case.username}).Role
                     }
                 }
             }

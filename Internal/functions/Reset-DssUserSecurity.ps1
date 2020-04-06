@@ -42,13 +42,18 @@ Function Reset-DssUserSecurity {
             write-verbose "in loop"
             if ($err.Name -match 'Database user (.*) should be in config') {
                 write-verbose "match"
-                Remove-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $Matches[1] -Confirm:$false
+                if ($IsWindows) {
+                    Remove-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $Matches[1] -Confirm:$false -ErrorAction SilentlyContinue
+                } else {
+                    Invoke-DbaQuery -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Query "DROP USER $($Matches[1])"
+                }
             }
-            if ($err.Name -match '(.*) should be a member of .* (Config)') {
+            if ($err.Name -match '(.*) should be a member of (.*) \(Config\)') {
+                write-verbose "adding role member"
                 Add-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $Matches[1] -Role $Matches[2] -Confirm:$false
             }
             if ($err.Name -match 'Should have assigned (.*) permission (.*) on (.*)') {
-                Invoke-DbaQuery -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Query "GRANT $($Matches[2]) on $($Matches[3]) to $($Matches[0]"
+                Invoke-DbaQuery -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Query "GRANT $($Matches[2]) on $($Matches[3]) to $($Matches[1])"
             }
             if ($err.Name -match '(.*)should exist in database') {
                 # Need to sort out login names
