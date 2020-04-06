@@ -29,37 +29,49 @@ function Invoke-DssTest {
         [switch]$RoleConfig,
         [switch]$SchemaConfig,
         [switch]$ObjectConfig,
-        [object]$config
+        [switch]$Output,
+        [object]$Config,
+        [switch]$Quiet
     )
     begin {
 
     }
     process {
-        # $config = Get-DssConfig -ConfigPath $ConfigPath
-
-        $srv = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-
-
         $configSwitch = $true
-        if ($UserConfig -or $SchemaConfig -or $RoleConfig -or $ObjectConfig) {
+        if ($UserConfig -eq $True -or $SchemaConfig -eq $True -or $RoleConfig -eq $True -or $ObjectConfig -eq $True) {
             $configSwitch = $false
         }
-        if ($UserConfig -or $configSwitch) {
+
+        if ($Quiet -eq $true) {
+            $show = 'None'
+        } else {
+            $show = 'All'
+        }
+
+        if ($UserConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing User config"
-            Invoke-Pester -Script @{ Path = "$PSModuleRoot\checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} }
+            $usersResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         } 
-        if ($RoleConfig -or $configSwitch) {
+        if ($RoleConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing Role config"
-            Invoke-Pester -Script @{ Path = "$PSModuleRoot\checks\Roles.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} }
+            $rolesResults = Invoke-Pester -Script @{ Path = "$PSModuleRoot\Checks\Roles.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         } 
-        if ($SchemaConfig -or $configSwitch) {
+        if ($SchemaConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing Schema config"
-            Invoke-Pester -Script @{ Path = "$PSModuleRoot\checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} }
+            $schemaResults = Invoke-Pester -Script @{ Path = "$PSModuleRoot\Checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         } 
-        if ($ObjectConfig -or $configSwitch) {
+        if ($ObjectConfig -eq $True  -or $configSwitch) {
             Write-Verbose -Message "Testing Object config"
-            Invoke-Pester -Script @{ Path = "$PSModuleRoot\checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} }
+            $objectRestults = Invoke-Pester -Script @{ Path = "$PSModuleRoot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
+        }
+        if ($output -eq $true){
+            [PSCustomObject]@{
+                usersResults = $usersResults
+                rolesResults = $rolesResults
+                schemaResults = $schemaResults
+                objectRestults = $objectRestults
             }
+        }
     }
     end {}
 }
