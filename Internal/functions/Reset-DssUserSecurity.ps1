@@ -42,10 +42,12 @@ Function Reset-DssUserSecurity {
             write-verbose "$($err.name)"
             if ($err.Name -match 'Database user (.*) should be in config') {
                 write-verbose "additional user $($Matches[1])"
-                if ($IsWindows) {
-                    Remove-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $Matches[1] -Confirm:$false -ErrorAction SilentlyContinue
-                } else {
+                if ($IsCoreCLR) {
+                    # Due to a flaw in .NETcore, Remove-DbaUser won't work in PsCore :(, so we have to use T-SQL. Remove once it's fixed.
                     Invoke-DbaQuery -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Query "DROP USER $($Matches[1])"
+                } else {
+                    Remove-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $Matches[1] -Confirm:$false -ErrorAction SilentlyContinue
+
                 }
             }
             if ($err.Name -match '(.*) should be a member of (.*) \(Config\)') {
@@ -53,6 +55,7 @@ Function Reset-DssUserSecurity {
                 Add-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $Matches[1] -Role $Matches[2] -Confirm:$false
             }
             if ($err.Name -match 'Should have assigned (.*) permission (.*) on (.*)') {
+                Write-Verbose "Granting 'GRANT $($Matches[2]) on $($Matches[3]) to $($Matches[1])' "
                 Invoke-DbaQuery -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Query "GRANT $($Matches[2]) on $($Matches[3]) to $($Matches[1])" -Verbose
             }
             if ($err.Name -match '(.*)should exist in database') {
