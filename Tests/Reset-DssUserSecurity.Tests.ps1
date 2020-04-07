@@ -1,18 +1,20 @@
 $commandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 . "$PSScriptRoot\constants.ps1"
 
-BeforeAll{
-    # Reset normal1 database
-    $srv = Connect-DbaInstance -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential
-    $query = get-Content '.\Tests\scenarios\normal1\normal1.sql' -raw
-    Remove-DbaDatabase -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -Confirm:$false
-    $srv.Databases['master'].ExecuteNonQuery($query)
-    
-    $config = New-DssConfig @script:appsplat -database normal1 -UserConfig
-}
+
 
 Describe "$commandName Integration Tests" {
+    BeforeAll {
+        # Reset normal1 database
+        $srv = Connect-DbaInstance -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential
+        $query = Get-Content '.\Tests\scenarios\normal1\normal1.sql' -raw
+        Remove-DbaDatabase -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -Confirm:$false
+        $srv.Databases['master'].ExecuteNonQuery($query)
+    
+        $config = New-DssConfig @script:appsplat -database normal1 -UserConfig
+    }
     Context "Test removing errant user" {
+        $config = New-DssConfig @script:appsplat -database normal1 -UserConfig
         New-DbaDbUser @script:appsplat -Database normal1 -UserName baduser
         $results = Invoke-DssTest @script:appsplat -database normal1 -UserConfig -Output -Config $config -Quiet
         It "BadUser should exist before fix" {
@@ -51,14 +53,13 @@ Describe "$commandName Integration Tests" {
         }
 
     }
-        
+    AfterAll {
+        # Reset normal1 database
+        $query = Get-Content '.\Tests\scenarios\normal1\normal1.sql' -raw
+        Remove-DbaDatabase -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -Confirm:$false
+        $srv.Databases['master'].ExecuteNonQuery($query)
+    }    
 
 }
 
 
-AfterAll {
-    # Reset normal1 database
-    $query = get-Content '.\Tests\scenarios\normal1\normal1.sql' -raw
-    Remove-DbaDatabase -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -Confirm:$false
-    $srv.Databases['master'].ExecuteNonQuery($query)
-}
