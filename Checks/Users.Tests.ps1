@@ -14,7 +14,7 @@ Describe "Test config against database" {
             It "$($case.username) should exist in database" {
                 $case.username | Should -BeIn $dbUsers.Name -Because "User Should exist"
             }
-            if ($case.roles.count -gt 0){
+            if (($case.roles | Measure-Object).count -gt 0){
                 Foreach ($role in $case.roles){
                     It "$($case.username) should be a member of $role (Config)" {
                         $role | Should -BeIn ($dbUserRoles | Where-Object {$_.Username -eq $case.username}).Role

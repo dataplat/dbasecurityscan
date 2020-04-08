@@ -27,7 +27,7 @@ Foreach ($schema in $config.schemas) {
         # $($schema.objects)
         $title = ($schema.objects) -join ','
         It "Schema $($schema.schemaname) should contain $title Objects" {
-            $objectsSchema.count | Should -Be $schema.objects.count -Because "The schema should only contain the specified objects"
+            ($objectsSchema | Measure-Object).count | Should -Be ($schema.objects | Measure-Object).count -Because "The schema should only contain the specified objects"
         }
 
         Foreach ($object in  $schema.objects) {
