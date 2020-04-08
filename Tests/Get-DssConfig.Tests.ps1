@@ -16,7 +16,7 @@ Describe "Integration tests for $commandName" {
         $config.Config.defaultAccess | Should -Be 'noAccess'
     }
     It "Should have content" {
-        $config.Users.Count | Should -Be 2
-        $config.Users.Roles.Count | Should -Be 3
+        ($config.Users | Measure-Object).count | Should -Be 2
+        ($config.Users.Roles | Measure-Object).Count | Should -Be 3
     }
 }

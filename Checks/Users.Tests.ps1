@@ -28,7 +28,7 @@ Describe "Test config against database" {
                 }
             }
 
-            if ($case.Permissions.Count -ge 1) {
+            if (($case.Permissions | Measure-Object).Count -ge 1) {
                 $testPermissions =  Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -IncludePublicGuest
                 # Go through to check the specified permissions are there
                 Foreach($permission in $case.Permissions){
