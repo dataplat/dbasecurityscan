@@ -25,8 +25,9 @@ Function New-DssUserConfig {
     end {
         $output = @()
 
-        $users = Get-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database 
-        $securable = Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludePublicGuest | Where-Object {$_.SourceView -eq 'sys.all_objects' -and $_.GranteeType -eq $_.GranteeType -eq 'SQL_USER'}
+        $users = Get-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
+        $securable = Get-DbaUserPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludePublicGuest 
+        # | Where-Object {$_.SourceView -eq 'sys.all_objects' -and $_.GranteeType -eq $_.GranteeType -eq 'SQL_USER'}
         $roles= Get-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludeSystemUser
 
         Foreach ($user in ($users)){

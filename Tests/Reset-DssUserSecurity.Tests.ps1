@@ -45,11 +45,24 @@ Describe "$commandName Integration Tests" {
         Invoke-DbaQuery @script:appsplat -Database normal1 -Query 'revoke ALTER on sp_perms to testuser'
         $results = Invoke-DssTest @script:appsplat -database normal1 -UserConfig -Output -Config $config -Quiet
         It "Permission should not exist before fix" {
-            (Get-DbaPermission @Script:appsplat -Database normal1 | Where-Object {$_.Grantee -eq 'testuser' -and $_.PermissionName -eq 'ALTER' -and $_.Grantee -eq 'testuser'} | Measure-Object).count | Should -Be 0
+            (Get-DbaUserPermission @Script:appsplat -Database normal1 -IncludePublicGuest | Where-Object { $_.Grantee -eq 'testuser' -and $_.Permission -eq 'ALTER' -and $_.Securable -eq 'sp_perms' } | Measure-Object).count | Should -Be 0
         }
         Reset-DssUserSecurity @script:appsplat -database normal1 -TestResult $results
         It "Permission should exist after fix" {
-            (Get-DbaPermission @Script:appsplat -Database normal1 | Where-Object {$_.Grantee -eq 'testuser' -and $_.PermissionName -eq 'ALTER' -and $_.Grantee -eq 'testuser'} | Measure-Object).count | Should -Be 1
+            (Get-DbaUserPermission @Script:appsplat -Database normal1 -IncludePublicGuest | Where-Object { $_.Grantee -eq 'testuser' -and $_.Permission -eq 'ALTER' -and $_.Securable -eq 'sp_perms' } | Measure-Object).count | Should -Be 1
+        }
+
+    }
+
+    Context "Test Removing extraneous permissions" {
+        Invoke-DbaQuery @script:appsplat -Database normal1 -Query 'Grant ALTER on sp_perms to readonly'
+        $results = Invoke-DssTest @script:appsplat -database normal1 -UserConfig -Output -Config $config -Quiet
+        It "Permission should exist before fix" {
+            (Get-DbaUserPermission @Script:appsplat -Database normal1 -IncludePublicGuest | Where-Object { $_.Grantee -eq 'readonly' -and $_.Permission -eq 'ALTER' -and $_.Securable -eq 'sp_perms' } | Measure-Object).count | Should -Be 1
+        }
+        Reset-DssUserSecurity @script:appsplat -database normal1 -TestResult $results
+        It "Permission should not exist after fix" {
+            (Get-DbaUserPermission @Script:appsplat -Database normal1 -IncludePublicGuest | Where-Object { $_.Grantee -eq 'readonly' -and $_.Permission -eq 'ALTER' -and $_.Securable -eq 'sp_perms' } | Measure-Object).count | Should -Be 0
         }
 
     }
