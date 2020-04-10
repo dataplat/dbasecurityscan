@@ -16,4 +16,9 @@ if (Test-Path $HOME\dbaSecurityScan-constants.ps1) {
     $script:appvPassword = ConvertTo-SecureString 'P@ssw0rdl!ng' -AsPlainText -Force
     $script:appvSqlCredential = New-Object System.Management.Automation.PSCredential ('sa', $appvPassword)
     $script:IgnoreSQLCMD = $true
+
+    $script:appsplat = @{
+        SqlInstance = $script:appvSqlInstance
+        SqlCredential = $script:appvSqlCredential
+    }
 }
