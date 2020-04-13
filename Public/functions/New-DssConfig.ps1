@@ -24,7 +24,7 @@ function New-DssConfig {
     .PARAMETER ConfigPath
         Where to save the generated config, if not specified it will go to STDOUT
 
-    .PARAMETER ExcludeSystemObjects
+    .PARAMETER IncludeSystemObjects
         By default the object config does not include system objects. This switch overrides that and returns all objects
 
     .EXAMPLE
@@ -71,14 +71,21 @@ function New-DssConfig {
         } 
         if ($SchemaConfig -or $configSwitch) {
             Write-Verbose -Message "Fetching Schema config"
-            $configSchema = New-DssSchemaConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database
+            $configSchema = New-DssSchemaConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludeSystemObjects:$IncludeSystemObjects
         } 
         if ($ObjectConfig -or $configSwitch) {
             Write-Verbose -Message "Fetching Object config"
             $configObject = New-DssObjectConfig -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -IncludeSystemObjects:$IncludeSystemObjects
         }
+        $internalConfig = [PsCustomObject]@{
+                    SystemObjects   = if($IncludeSystemObjects -eq $true ){$True} else {$False}
+                    Generated       = Get-Date
+                    Database        = $Database
+                    SqlInstance     = $SqlInstance
+                }   
 
         $output = [PsCustomObject]@{
+                    config = $internalConfig
                     roles = $configRole
                     users = $configUser
                     schemas = $configSchema

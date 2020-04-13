@@ -14,6 +14,9 @@ go
 create user schemaOwner without login;
 go
 
+create schema deleteable;
+go
+
 create schema unowned;
 go
 

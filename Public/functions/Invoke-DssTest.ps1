@@ -18,6 +18,9 @@ function Invoke-DssTest {
     .EXAMPLE
         Invoke-DssTest -SqlInstance localhost -ConfigPath c:\tests\secrets.json, http://github.com/someone/SqlTest/raw/config.json
 
+    .EXAMPLE
+        $Output = Invoke-DssTest -SqlInstance localhost -Config $config -Output -Quiet
+
     #>
     [CmdletBinding(DefaultParameterSetName = "Default")]
     param (
@@ -62,14 +65,14 @@ function Invoke-DssTest {
         } 
         if ($ObjectConfig -eq $True  -or $configSwitch) {
             Write-Verbose -Message "Testing Object config"
-            $objectRestults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
+            $objectResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         }
         if ($output -eq $true){
             [PSCustomObject]@{
                 usersResults = $usersResults
                 rolesResults = $rolesResults
                 schemaResults = $schemaResults
-                objectRestults = $objectRestults
+                objectRestults = $objectResults
             }
         }
     }
