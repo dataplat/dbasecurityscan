@@ -81,10 +81,10 @@ Function Reset-DssSchemaSecurity {
             }
 
 
-            if ($err.name -match "Principal (.*) Should have (.*) permission on schema (.*) (Config)" -and $RemoveOnly -ne $true) {
+            if ($err.name -match "Principal (.*) Should have (.*) permission on schema (.*) \(Config\)" -and $RemoveOnly -ne $true) {
                 Write-Verbose "Missing permission , $($Matches[1]) Should have $($Matches[2]) permission on schema $($Matches[3]) adding"
                 # Grant Permission
-                $grantSql = "GRANT $($Matches[2]) ON $($Matches[3]) TO $($Matches[1])"
+                $grantSql = "GRANT $($Matches[2]) ON SCHEMA::$($Matches[3]) TO $($Matches[1])"
                 [PsCustomObject]@{
                     Type        = "Schema Error"
                     Error       = $err.Name

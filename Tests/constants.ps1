@@ -1,3 +1,4 @@
+$VerbosePreference = "Continue"
 if (Test-Path $HOME\dbaSecurityScan-constants.ps1) {
     Write-Verbose "$HOME\dbaSecurityScan-constants.ps1 found."
     . $HOME\dbaSecurityScan-constants.ps1
