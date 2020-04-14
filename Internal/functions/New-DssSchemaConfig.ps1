@@ -42,7 +42,8 @@ function New-DssSchemaConfig {
                             ss.name as 'schemaname',
                             sdp.name as 'owner',
                             sa.name as 'object',
-                            sa.type_desc
+                            sa.type_desc,
+                            sa.is_ms_shipped
                         from 
                             sys.schemas ss 
                                 inner join sys.all_objects sa on ss.schema_id = sa.schema_id
@@ -73,7 +74,7 @@ function New-DssSchemaConfig {
         $output = @()
         ForEach ($schema in $dbSchema){
 
-            $objects = $dbObject | Where-Object {$_.schemaName -eq $schema.schemaName} | Select-Object -Property owner, object, type_desc
+            $objects = $dbObject | Where-Object {$_.schemaName -eq $schema.schemaName} | Select-Object -Property owner, object, type_desc, is_ms_shipped
             $permissions  = $dbPermissions | Where-Object {$_.schemaName -eq $schema.schemaName} | Select-Object permission, grantee
             $output +=[PsCustomObject]@{
                 schemaName = $schema.schemaName

@@ -7,6 +7,11 @@ param (
     [Switch]$IgnoreDatabaseCheck,
     [Switch]$IncludeSystemObjects
 )
+if ($config.config.SystemObjects -ne $true -and $IncludeSystemObjects -ne $true) {
+    $sqlSystemFilter = 1
+} else {
+    $sqlSystemFilter = 2
+}
 
 if ($IgnoreConfigCheck -ne $true) {
     Describe "Testing Schema config against database" {
@@ -35,10 +40,15 @@ if ($IgnoreConfigCheck -ne $true) {
                 }
 
 
-                $checkSql = "select name, type_desc from sys.all_objects where schema_id=SCHEMA_ID('$($schema.schemaname)')" 
-                if ($config.config.SystemObject -ne 'False' -or $IncludeSystemObjects -eq $true) {
-                    $checkSql += " and is_ms_shipped=0"
-                }
+                $checkSql = "select 
+                                name, 
+                                type_desc 
+                            from 
+                                sys.all_objects 
+                            where 
+                                schema_id=SCHEMA_ID('$($schema.schemaname)') 
+                                and is_ms_shipped<s$sqlSystemFilter" 
+
                 $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $checkSql 
                 
                 # Test for schema objects 
@@ -73,19 +83,19 @@ if ($IgnoreDatabaseCheck -ne $True) {
                         on ss.principal_id=sdp.principal_id
         "
         $dbSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $sqlSchema 
-        # $schemaPermissions = Get-DbaUserPermission -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -IncludeSystemObjects 
-        $schemaPermissionSql = "
-                        select 
-                            ss.name as 'SchemaName',
-                            sdperm.permission_name as 'Permission',
-                            USER_NAME(sdp.principal_id) as 'Grantee'
-                        from 
-                            sys.database_permissions sdperm 
-                                inner join sys.schemas ss on sdperm.major_id=ss.schema_id
-                                inner join sys.database_principals sdp on sdperm.grantee_principal_id = sdp.principal_id
-                        where class_desc='SCHEMA'
-        "
-        $schemaPermissions = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $schemaPermissionSql
+        $schemaPermissions = Get-DbaUserPermission -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -IncludeSystemObjects:$IncludeSystemObjects
+        #  $schemaPermissionSql = "
+        #                 select 
+        #                     ss.name as 'SchemaName',
+        #                     sdperm.permission_name as 'Permission',
+        #                     USER_NAME(sdp.principal_id) as 'Grantee'
+        #                 from 
+        #                     sys.database_permissions sdperm 
+        #                         inner join sys.schemas ss on sdperm.major_id=ss.schema_id
+        #                         inner join sys.database_principals sdp on sdperm.grantee_principal_id = sdp.principal_id
+        #                 where class_desc='SCHEMA'
+        # "
+        # $schemaPermissions = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $schemaPermissionSql
         Foreach ($schema in $dbSchema) {
             Context "Checking schema $($schema.schemaname) (DB)" {
 
@@ -103,10 +113,11 @@ if ($IgnoreDatabaseCheck -ne $True) {
                                     else sa.type_desc
                                 end as 'type'
                             from 
-                                sys.all_objects sa where schema_id=SCHEMA_ID('$($schema.schemaname)')"
-                if ($config.config.SystemObject -ne 'False' -or $IncludeSystemObjects -eq $true) {
-                    $checkSql += " and is_ms_shipped=0"
-                }
+                                sys.all_objects sa
+                            where 
+                                schema_id=SCHEMA_ID('$($schema.schemaname)')
+                                and sa.is_ms_shipped<$sqlSystemFilter"
+
                 $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $checkSql 
 
                 # Check DB Schema Objects are in config.
