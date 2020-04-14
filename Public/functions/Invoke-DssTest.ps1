@@ -34,7 +34,8 @@ function Invoke-DssTest {
         [switch]$ObjectConfig,
         [switch]$Output,
         [object]$Config,
-        [switch]$Quiet
+        [switch]$Quiet,
+        [switch]$IncludeSystemObjects
     )
     begin {
 
@@ -61,7 +62,7 @@ function Invoke-DssTest {
         } 
         if ($SchemaConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing Schema config"
-            $schemaResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
+            $schemaResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database; IncludeSystemObjects = $IncludeSystemObjects } } -PassThru -Show $show
         } 
         if ($ObjectConfig -eq $True  -or $configSwitch) {
             Write-Verbose -Message "Testing Object config"

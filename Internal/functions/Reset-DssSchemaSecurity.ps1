@@ -98,7 +98,7 @@ Function Reset-DssSchemaSecurity {
                 }
             }
 
-            if ($err.name -match "Schema (.*) should be in config (DB)" -and $AddOnly -ne $true) {
+            if ($err.name -match "Schema (.*) should be in config \(DB\)" -and $AddOnly -ne $true) {
                 Write-Verbose "Schema $($Matches[1]) not in config, removing from db "
                 $dropSql = "DROP SCHEMA $($Matches[1])"
                 [PsCustomObject]@{
@@ -115,7 +115,7 @@ Function Reset-DssSchemaSecurity {
 
             }
 
-            if ($err.name -match "Database object (.*) -  (.*) in (.*) should be in config (DB)" -and $AddOnly -ne $true) {
+            if ($err.name -match "Database object (.*) - (.*) in (.*) should be in config \(DB\)" -and $AddOnly -ne $true) {
                 Write-Verbose "Object in schema being removed."
                 # Drop Schema
                 $dropSql = "DROP $($matches[1]) $($matches[3]).$($matches[2])"
@@ -132,7 +132,7 @@ Function Reset-DssSchemaSecurity {
                 }
             }
 
-            if ($error.name -match "Principal (.*) should have (.*) permission on schema (.*) (DB) " -and $AddOnly -ne $true) {
+            if ($error.name -match "Principal (.*) should have (.*) permission on schema (.*) \(DB\)" -and $AddOnly -ne $true) {
                 Write-Verbose "Permission granted that's not in config, removing"
                 # Revoke permission
                 $revokeSql = "REVOKE $($Matches[2]) ON $($Matches[3]) FROM $($Matches[1])"
