@@ -47,7 +47,7 @@ if ($IgnoreConfigCheck -ne $true) {
                                 sys.all_objects 
                             where 
                                 schema_id=SCHEMA_ID('$($schema.schemaname)') 
-                                and is_ms_shipped<s$sqlSystemFilter" 
+                                and is_ms_shipped<$sqlSystemFilter" 
 
                 $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $checkSql 
                 
