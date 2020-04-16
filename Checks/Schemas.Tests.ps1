@@ -83,19 +83,35 @@ if ($IgnoreDatabaseCheck -ne $True) {
                         on ss.principal_id=sdp.principal_id
         "
         $dbSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $sqlSchema 
-        $schemaPermissions = Get-DbaUserPermission -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -IncludeSystemObjects:$IncludeSystemObjects
-        #  $schemaPermissionSql = "
-        #                 select 
-        #                     ss.name as 'SchemaName',
-        #                     sdperm.permission_name as 'Permission',
-        #                     USER_NAME(sdp.principal_id) as 'Grantee'
-        #                 from 
-        #                     sys.database_permissions sdperm 
-        #                         inner join sys.schemas ss on sdperm.major_id=ss.schema_id
-        #                         inner join sys.database_principals sdp on sdperm.grantee_principal_id = sdp.principal_id
-        #                 where class_desc='SCHEMA'
-        # "
-        # $schemaPermissions = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $schemaPermissionSql
+        # $schemaPermissions = Get-DbaUserPermission -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -IncludeSystemObjects:$IncludeSystemObjects
+         $schemaPermissionSql = "
+                        select 
+                            ss.name as 'SchemaName',
+                            sdperm.permission_name as 'Permission',
+                            USER_NAME(sdp.principal_id) as 'Grantee'
+                        from 
+                            sys.database_permissions sdperm 
+                                inner join sys.schemas ss on sdperm.major_id=ss.schema_id
+                                inner join sys.database_principals sdp on sdperm.grantee_principal_id = sdp.principal_id
+                        where class_desc='SCHEMA'
+        "
+        $schemaPermissions = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $schemaPermissionSql
+        
+                        $checkSql = "select 
+                                name,                             
+                                case 
+                                    when sa.type_desc = 'SQL_STORED_PROCEDURE' THEN 'PROCEDURE'
+                                    when sa.type_desc like '%FUNCTION%' THEN 'FUNCTION'
+                                    else sa.type_desc
+                                end as 'type',
+                                schema_name(schema_id) as 'schema_name'
+                            from 
+                                sys.all_objects sa
+                            where 
+                                sa.is_ms_shipped<$sqlSystemFilter"
+
+                $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $checkSql 
+        
         Foreach ($schema in $dbSchema) {
             Context "Checking schema $($schema.schemaname) (DB)" {
 
@@ -105,23 +121,23 @@ if ($IgnoreDatabaseCheck -ne $True) {
                 }
 
 
-                $checkSql = "select 
-                                name,                             
-                                case 
-                                    when sa.type_desc = 'SQL_STORED_PROCEDURE' THEN 'PROCEDURE'
-                                    when sa.type_desc like '%FUNCTION%' THEN 'FUNCTION'
-                                    else sa.type_desc
-                                end as 'type'
-                            from 
-                                sys.all_objects sa
-                            where 
-                                schema_id=SCHEMA_ID('$($schema.schemaname)')
-                                and sa.is_ms_shipped<$sqlSystemFilter"
+                # $checkSql = "select 
+                #                 name,                             
+                #                 case 
+                #                     when sa.type_desc = 'SQL_STORED_PROCEDURE' THEN 'PROCEDURE'
+                #                     when sa.type_desc like '%FUNCTION%' THEN 'FUNCTION'
+                #                     else sa.type_desc
+                #                 end as 'type'
+                #             from 
+                #                 sys.all_objects sa
+                #             where 
+                #                 schema_id=SCHEMA_ID('$($schema.schemaname)')
+                #                 and sa.is_ms_shipped<$sqlSystemFilter"
 
-                $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $checkSql 
+                # $objectsSchema = Invoke-DbaQuery -SqlInstance $SqlInstance -sqlcredential $sqlcredential -database $database -Query $checkSql 
 
                 # Check DB Schema Objects are in config.
-                ForEach ($object in $objectsSchema){
+                ForEach ($object in $objectsSchema | Where-Object {$_.Schema_name -eq $schema.schemaname}){
                     It "Database object $($object.type) - $($object.name) in $($Schema.schemaname) should be in config (DB)"{
                         $object.name -in ($config.schemas | Where-Object { $_.schemaname -eq $schema.schemaname }).objects.object | Should -BeTrue
                     }
@@ -131,7 +147,7 @@ if ($IgnoreDatabaseCheck -ne $True) {
                 # Check DB permissions on Schema against config
                 ForEach ($permission in $schemaPermissions | Where-Object { $_.SchemaName -eq $schema.schemaName }) {
                     It "Principal $($permission.Grantee) should have $($permission.permission) permission on schema $($schema.schemaName) (DB)" {
-                        ($permission | Where-Object {$_.Grantee -eq $confingPermissions.Grantee -and $_.Permission -eq $configPermissions.Permission} | Measure-Object).count | Should -Be 1
+                        ($permission | Where-Object {$_.Grantee -eq $configPermissions.Grantee -and $_.Permission -eq $configPermissions.Permission} | Measure-Object).count | Should -Be 1
                     }
                 }
             }            

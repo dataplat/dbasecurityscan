@@ -132,10 +132,10 @@ Function Reset-DssSchemaSecurity {
                 }
             }
 
-            if ($error.name -match "Principal (.*) should have (.*) permission on schema (.*) \(DB\)" -and $AddOnly -ne $true) {
-                Write-Verbose "Permission granted that's not in config, removing"
+            if ($err.name -match "Principal (.*) should have (.*) permission on schema (.*) \(DB\)" -and $AddOnly -ne $true) {
+                Write-Verbose "Permission granted on Schema that's not in config, removing"
                 # Revoke permission
-                $revokeSql = "REVOKE $($Matches[2]) ON $($Matches[3]) FROM $($Matches[1])"
+                $revokeSql = "REVOKE $($Matches[2]) ON SCHEMA::$($Matches[3]) FROM $($Matches[1])"
                 [PsCustomObject]@{
                     Type        = "Schema Error"
                     Error       = $err.Name
@@ -144,6 +144,7 @@ Function Reset-DssSchemaSecurity {
                     SqlQuery    = $revokeSql
                     dbaTools    = $null      
                 }
+
                 if ($OutputOnly -ne $true) {
                     Invoke-DbaQuery -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database -Query $revokeSQL
                 }
