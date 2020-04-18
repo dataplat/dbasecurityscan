@@ -1,6 +1,6 @@
 $commandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 Write-host "importing $PSScriptRoot/constants.ps1 "
-. "$PSScriptRoot/constants.ps1"
+. "$PSScriptRoot\constants.ps1"
 
 Describe "Unit tests for $commandName" {
     It "$commandName Should Exist" {
@@ -10,20 +10,7 @@ Describe "Unit tests for $commandName" {
 
 Describe "Integration Tests for $commandName" {
     $config = New-DssSchemaConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database schema1
-
-    Write-host "-------------------------"
-    Write-Host "$config"
-    Write-host "-------------------------"
-
-    Foreach ($c in $config){
-        if($c.schemaname -eq 'unowned'){
-            foreach ($o in $config.objects) {
-                It "see $.object exists"{
-                    1 | Should -Be 1
-                }
-            }
-        }
-    }
+    
     $sConfig = [PsCustomObject]@{
         schemas = $config
     }

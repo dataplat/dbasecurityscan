@@ -46,7 +46,9 @@ if ($script:IgnoreSQLCMD) {
     }
 }
 Write-Host "Importing dbaSecurityScans"
-Import-Module "$PSScriptRoot\..\dbaSecurityScan.psd1"
+Import-Module "$PSScriptRoot\..\dbaSecurityScan.psd1" -force
+#Get internal functions
+Import-Module "$PSScriptRoot\..\dbaSecurityScan.psm1" -force
 
 $totalFailed = 0
 $totalRun = 0
