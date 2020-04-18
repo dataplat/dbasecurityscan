@@ -32,7 +32,7 @@ Function New-DssUserConfig {
 
         Foreach ($user in ($users)){
             $role = $roles | Where-Object {$_.Username -eq $user.name} | Select-Object -Property role -unique
-            $permissions = $securable | Where-Object {$_.grantee -eq $user.name} | Select-Object -Property  schemaowner,securable,permission
+            $permissions = $securable | Where-Object {$_.grantee -eq $user.name} | Select-Object -Property  schemaowner,securable,permission,RoleSecurableClass
             $output += [PsCustomObject]@{username = $user.name
                 permissions = $permissions
                 roles = $role.role

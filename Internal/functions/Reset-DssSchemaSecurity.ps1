@@ -30,7 +30,7 @@ Function Reset-DssSchemaSecurity {
         [string]$SqlInstance,
         [PSCredential]$SqlCredential,
         [String]$Database,
-        [object]$TestResult,
+        [object]$TestResults,
         [switch]$OutputOnly,
         [switch]$AddOnly,
         [switch]$RemoveOnly 
@@ -40,11 +40,11 @@ Function Reset-DssSchemaSecurity {
     }
     process { }
     end {
-        $errors = $TestResult.SchemaResults.TestResult | Where-Object { $_.Result -eq 'Failed' }
+        $errors = $TestResults.SchemaResults.TestResult | Where-Object { $_.Result -eq 'Failed' }
         ForEach ($err in $errors) {
             Write-Verbose "$($err.name)"
 
-            If ($err.Name -match "Schema (.*) should exist" -and $RemoveOnly -ne $true){
+            If ($err.Name -match "Schema (.*) should exist" -and $RemoveOnly.IsPresent -ne $true){
                 Write-Verbose "Schema $($Matches[1]) is missing"
                 # Create Schema
                 $createSql = "CREATE SCHEMA $($Matches[1])"
@@ -61,7 +61,7 @@ Function Reset-DssSchemaSecurity {
                 }
             }
 
-            if ($err.Name -match "Schema (.*) should be owned by (.*)" -and $RemoveOnly -ne $true) {
+            if ($err.Name -match "Schema (.*) should be owned by (.*)" -and $RemoveOnly.IsPresent -ne $true) {
                 Write-Verbose "Schema $($Matches[1]) not owned by $($Matches[2]), change owner"
                 # ReAssign Schema
                 $authorizeSql = "ALTER AUTHORIZATION ON SCHEMA::$($Matches[1]) TO $($Matches[2])"
@@ -81,7 +81,7 @@ Function Reset-DssSchemaSecurity {
             }
 
 
-            if ($err.name -match "Principal (.*) Should have (.*) permission on schema (.*) \(Config\)" -and $RemoveOnly -ne $true) {
+            if ($err.name -match "Principal (.*) Should have (.*) permission on schema (.*) \(Config\)" -and $RemoveOnly.IsPresent -ne $true) {
                 Write-Verbose "Missing permission , $($Matches[1]) Should have $($Matches[2]) permission on schema $($Matches[3]) adding"
                 # Grant Permission
                 $grantSql = "GRANT $($Matches[2]) ON SCHEMA::$($Matches[3]) TO $($Matches[1])"
@@ -98,7 +98,7 @@ Function Reset-DssSchemaSecurity {
                 }
             }
 
-            if ($err.name -match "Schema (.*) should be in config \(DB\)" -and $AddOnly -ne $true) {
+            if ($err.name -match "Schema (.*) should be in config \(DB\)" -and $AddOnly.IsPresent -ne $true) {
                 Write-Verbose "Schema $($Matches[1]) not in config, removing from db "
                 $dropSql = "DROP SCHEMA $($Matches[1])"
                 [PsCustomObject]@{
@@ -115,7 +115,7 @@ Function Reset-DssSchemaSecurity {
 
             }
 
-            if ($err.name -match "Database object (.*) - (.*) in (.*) should be in config \(DB\)" -and $AddOnly -ne $true) {
+            if ($err.name -match "Database object (.*) - (.*) in (.*) should be in config \(DB\)" -and $AddOnly.IsPresent -ne $true) {
                 Write-Verbose "Object in schema being removed."
                 # Drop Schema
                 $dropSql = "DROP $($matches[1]) $($matches[3]).$($matches[2])"
@@ -132,7 +132,7 @@ Function Reset-DssSchemaSecurity {
                 }
             }
 
-            if ($err.name -match "Principal (.*) should have (.*) permission on schema (.*) \(DB\)" -and $AddOnly -ne $true) {
+            if ($err.name -match "Principal (.*) should have (.*) permission on schema (.*) \(DB\)" -and $AddOnly.IsPresent -ne $true) {
                 Write-Verbose "Permission granted on Schema that's not in config, removing"
                 # Revoke permission
                 $revokeSql = "REVOKE $($Matches[2]) ON SCHEMA::$($Matches[3]) FROM $($Matches[1])"

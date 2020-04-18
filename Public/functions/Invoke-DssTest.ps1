@@ -32,7 +32,7 @@ function Invoke-DssTest {
         [switch]$RoleConfig,
         [switch]$SchemaConfig,
         [switch]$ObjectConfig,
-        [switch]$Output,
+        [switch]$NoOutput,
         [object]$Config,
         [switch]$Quiet,
         [switch]$IncludeSystemObjects
@@ -68,12 +68,12 @@ function Invoke-DssTest {
             Write-Verbose -Message "Testing Object config"
             $objectResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         }
-        if ($output -eq $true){
+        if ($NoOutput -ne $true){
             [PSCustomObject]@{
-                usersResults = $usersResults
-                rolesResults = $rolesResults
-                schemaResults = $schemaResults
-                objectRestults = $objectResults
+                usersResults    = $usersResults
+                rolesResults    = $rolesResults
+                schemaResults   = $schemaResults
+                objectRestults  = $objectResults
             }
         }
     }

@@ -29,7 +29,7 @@ Function Reset-DssUserSecurity {
         [string]$SqlInstance,
         [PSCredential]$SqlCredential,
         [String]$Database,
-        [object]$TestResult,
+        [object]$TestResults,
         [switch]$OutputOnly,
         [switch]$AddOnly,
         [switch]$RemoveOnly
@@ -39,7 +39,7 @@ Function Reset-DssUserSecurity {
     }
     process {}
     end {
-        $errors = $TestResult.UsersResults.TestResult | Where-Object {$_.Result -eq 'Failed'}
+        $errors = $TestResults.UsersResults.TestResult | Where-Object {$_.Result -eq 'Failed'}
         ForEach ($err in $errors){
             write-verbose "$($err.name)"
             if ($err.Name -match 'Database user (.*) should be in config' -and $AddOnly -ne $True) {
@@ -71,10 +71,10 @@ Function Reset-DssUserSecurity {
                 [PsCustomObject]@{
                     Type       = "User Error"
                     Error      = $err.Name
-                    Action     = "Drop"
+                    Action     = "Add"
                     Resolution = "Add user to Role"
                     SqlQuery   = $null
-                    dbatools   = "Add-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $($Matches[1]) -Role $($Matches[2]) -Confirm:$false"
+                    dbatools   = "Add-DbaDbRoleMember -SqlInstance $($SqlInstance) -SqlCredential $($SqlCredential) -Database $($database) -User $($Matches[1]) -Role $($Matches[2]) -Confirm:$false"
                 }
             }
 
@@ -101,8 +101,8 @@ Function Reset-DssUserSecurity {
                 [PsCustomObject]@{
                     Type       = "User Error"
                     Error      = $err.Name
-                    Action     = "Drop"
-                    Resolution = "Remove user from Role"
+                    Action     = "Add"
+                    Resolution = "Grant permissions on object to user"
                     SqlQuery   = $grantSql
                     dbatools   = $null
                 }
@@ -118,6 +118,22 @@ Function Reset-DssUserSecurity {
                     Error      = $err.Name
                     Action     = "Drop"
                     Resolution = "Revoke object permission from user"
+                    SqlQuery   = $revokesql
+                    dbatools   = $null
+                }
+            }
+
+            if ($err.name -match "Should have assigned (.*) permission (.*) on schema (.*)" -and $RemoveOnly -ne $True) {
+                Write-Verbose "Granting 'GRANT $($Matches[2]) on schema $($Matches[3]) to $($Matches[1])' "
+                $grantSql = "GRANT $($Matches[2]) on schema::$($Matches[3]) TO $($Matches[1])"
+                if ($OutputOnly -ne $True) {
+                    Invoke-DbaQuery -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Query $grantSql -Verbose
+                }
+                [PsCustomObject]@{
+                    Type       = "User Error"
+                    Error      = $err.Name
+                    Action     = "Add"
+                    Resolution = "Grant permissions on schema to user"
                     SqlQuery   = $grantSql
                     dbatools   = $null
                 }
