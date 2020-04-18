@@ -4,13 +4,13 @@ $commandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 
 Describe "Integration Tests for $commandName" {
     $config = New-DssConfig -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -UserConfig
-    $output = Invoke-DssTest -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -config $config -Output -Quiet
-    $noOutput = Invoke-DssTest -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -config $config -WarningVariable warnvar -ErrorVariable errvar -Quiet
+    $output = Invoke-DssTest -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -config $config -Quiet
+    $noOutput = Invoke-DssTest -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -config $config -NoOutput -WarningVariable warnvar -ErrorVariable errvar -Quiet
     It "Should Run with no warnings" {
         '' -eq $warnvar | Should -BeTrue
     }
 
-    It "Should have returnd no output with no output switch set " {
+    It "Should have returnd no output with NoOutput switch set " {
         $null -eq $noOutput | Should -Be True
     }
 
@@ -26,7 +26,7 @@ Describe "Integration Tests for $commandName" {
     # Break the database
     (Connect-DbaInstance -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential).Databases['normal1'].ExecuteNonQuery("create user baduser without login")
 
-    $brokenOutput = Invoke-DssTest -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -config $config -Output -Quiet
+    $brokenOutput = Invoke-DssTest -SqlInstance $Script:appvSqlInstance -SqlCredential $Script:appvSqlCredential -Database normal1 -config $config -Quiet
     It "Should have failed test after breaking db" {
         ($brokenOutput.usersResults.Testresult | Where-Object {$_.result -eq 'Failed'} | measure-Object).count | Should -BeGreaterThan 0
     }

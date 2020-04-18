@@ -1,3 +1,6 @@
+use master;
+GO
+
 if exists (select * from sys.databases where name='schema1')
 BEGIN
 alter database schema1 set single_user with rollback immediate
@@ -12,6 +15,9 @@ use schema1;
 go
 
 create user schemaOwner without login;
+go
+
+create schema deleteable;
 go
 
 create schema unowned;
@@ -30,5 +36,6 @@ go
 
 create user test without login;
 go
+
 grant select on SCHEMA::unowned to test;
 go

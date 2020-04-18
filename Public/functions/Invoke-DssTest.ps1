@@ -18,6 +18,9 @@ function Invoke-DssTest {
     .EXAMPLE
         Invoke-DssTest -SqlInstance localhost -ConfigPath c:\tests\secrets.json, http://github.com/someone/SqlTest/raw/config.json
 
+    .EXAMPLE
+        $Output = Invoke-DssTest -SqlInstance localhost -Config $config -Quiet
+
     #>
     [CmdletBinding(DefaultParameterSetName = "Default")]
     param (
@@ -29,9 +32,10 @@ function Invoke-DssTest {
         [switch]$RoleConfig,
         [switch]$SchemaConfig,
         [switch]$ObjectConfig,
-        [switch]$Output,
+        [switch]$NoOutput,
         [object]$Config,
-        [switch]$Quiet
+        [switch]$Quiet,
+        [switch]$IncludeSystemObjects
     )
     begin {
 
@@ -58,18 +62,18 @@ function Invoke-DssTest {
         } 
         if ($SchemaConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing Schema config"
-            $schemaResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
+            $schemaResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database; IncludeSystemObjects = $IncludeSystemObjects } } -PassThru -Show $show
         } 
         if ($ObjectConfig -eq $True  -or $configSwitch) {
             Write-Verbose -Message "Testing Object config"
-            $objectRestults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
+            $objectResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         }
-        if ($output -eq $true){
+        if ($NoOutput -ne $true){
             [PSCustomObject]@{
-                usersResults = $usersResults
-                rolesResults = $rolesResults
-                schemaResults = $schemaResults
-                objectRestults = $objectRestults
+                usersResults    = $usersResults
+                rolesResults    = $rolesResults
+                schemaResults   = $schemaResults
+                objectRestults  = $objectResults
             }
         }
     }
