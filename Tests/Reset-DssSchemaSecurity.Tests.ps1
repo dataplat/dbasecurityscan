@@ -18,7 +18,7 @@ Describe "$commandName Integration Tests" {
     Context "Test Adding a missing schema" {
         $config = New-DssConfig @script:appsplat -database $script:database -SchemaConfig
         Invoke-DbaQuery @script:appsplat -Database $script:database -Query "DROP SCHEMA deleteable"
-        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Output -Config $config -Quiet
+        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Config $config -Quiet
         $checkSql = "select count(1) as 'count' from sys.schemas where name ='deleteable'"
         $checkResult = Invoke-DbaQuery @script:appsplat -Database $script:database -Query $checkSql
         It "Schema deleteable Should not exist before test" {
@@ -34,7 +34,7 @@ Describe "$commandName Integration Tests" {
     Context "Test fixing schema ownership" {
         $config = New-DssConfig @script:appsplat -database $script:database -SchemaConfig
         Invoke-DbaQuery @script:appsplat -Database $script:database -Query "ALTER AUTHORIZATION ON SCHEMA::deleteable to schemaOwner"
-        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Output -Config $config -Quiet
+        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Config $config -Quiet
         $checkSql = "select count(1) as 'count' from sys.schemas where name='deleteable' and principal_id=user_id('dbo')"
         $checkResult = Invoke-DbaQuery @script:appsplat -Database $script:database -Query $checkSql
         It "Schema deleteable Should not be owned by dbo before test" {
@@ -64,7 +64,7 @@ Describe "$commandName Integration Tests" {
         It "Principal test Should not have Select on unowned schema" {
             $checkResult.count | Should -Be 0
         }
-        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Output -Config $config -Quiet
+        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Config $config -Quiet
         Reset-DssSchemaSecurity @script:appsplat -database $script:database -TestResult $results
         $checkResult = Invoke-DbaQuery @script:appsplat -Database $script:database -Query $checkSql
         It "Principal test Should  have Select on unowned schema" {
@@ -88,7 +88,7 @@ Describe "$commandName Integration Tests" {
         It "Schema unwanted should exist before test" {
             $checkResult.count | Should -Be 1
         }
-        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Output -Config $config -Quiet
+        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Config $config -Quiet
         Reset-DssSchemaSecurity @script:appsplat -database $script:database -TestResult $results
         $checkResult = Invoke-DbaQuery @script:appsplat -Database $script:database -Query $checkSql
         It "Schema unwanted should not exist after test" {
@@ -113,7 +113,7 @@ Describe "$commandName Integration Tests" {
         It "Schema unwanted should exist before test" {
             $checkResult.count | Should -Be 1
         }
-        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Output -Config $config -Quiet
+        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Config $config -Quiet
         Reset-DssSchemaSecurity @script:appsplat -database $script:database -TestResult $results
         $checkResult = Invoke-DbaQuery @script:appsplat -Database $script:database -Query $checkSql
         It "Schema unwanted should not exist after test" {
@@ -143,7 +143,7 @@ Describe "$commandName Integration Tests" {
         It "Grant should exist before test" {
             $checkResult.count | Should -Be 1
         }
-        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Output -Config $config -Quiet
+        $results = Invoke-DssTest @script:appsplat -database $script:database -SchemaConfig -Config $config -Quiet
         Reset-DssSchemaSecurity @script:appsplat -database $script:database -TestResult $results
         $checkResult = Invoke-DbaQuery @script:appsplat -Database $script:database -Query $checkSql
         It "Grant should not exist after test" {

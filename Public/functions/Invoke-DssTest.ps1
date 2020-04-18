@@ -19,7 +19,7 @@ function Invoke-DssTest {
         Invoke-DssTest -SqlInstance localhost -ConfigPath c:\tests\secrets.json, http://github.com/someone/SqlTest/raw/config.json
 
     .EXAMPLE
-        $Output = Invoke-DssTest -SqlInstance localhost -Config $config -Output -Quiet
+        $Output = Invoke-DssTest -SqlInstance localhost -Config $config -Quiet
 
     #>
     [CmdletBinding(DefaultParameterSetName = "Default")]
