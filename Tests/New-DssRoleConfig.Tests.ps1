@@ -12,7 +12,7 @@ Describe "Integration Tests for $commandName" {
     $config = New-DssRoleConfig -SqlInstance $script:appvSqlInstance -SqlCredential $script:appvSqlCredential -Database roles1
 
     $sConfig = [PsCustomObject]@{
-        schemas = $config
+        roles = $config
     }
 
     It "Should Test db properly" {
