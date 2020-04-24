@@ -1,3 +1,6 @@
+use master
+go
+
 if exists (select * from sys.databases where name='roles1')
 BEGIN
 drop database roles1

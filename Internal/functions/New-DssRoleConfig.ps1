@@ -38,7 +38,7 @@ function New-DssRoleConfig {
                 rolename = $role.name
                 owner = $role.owner
                 members = $roleMembers | Where-Object {$_.role -eq $role.name} | Select-Object -Property UserName
-                permissions = $permissions | Where-Object {$_.Grantee -eq $role.name} | Select-Object permission, securable, grantee, member
+                permissions = $permissions | Where-Object {$_.Grantee -eq $role.name -and $_.GranteeType -eq 'DATABASE_ROLE'} | Select-Object permission, securable, grantee, schemaOwner -unique
             }
         }
         $output
