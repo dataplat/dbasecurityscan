@@ -51,12 +51,13 @@ Describe "Testing roles database against config" {
             }
         }
 
-        # Context "Testing Role permissions against config (DB)" {
-        #     ForEach ($perm in $permissions){
-        #         It "Role $($role.name) should have $($perm.permission) on $($perm.securable)"{
-
-        #         }
-        #     }
-        # }
+        Context "Testing Role permissions against config (DB)" {
+            $rps = ($config.roles | Where-Object {$_.rolename -eq $role.name}).permissions | Group-Object Grantee, Permission, SchemaOwner, Securable
+            ForEach ($perm in $permissions | Where-Object {$_.Grantee -eq $role.name}){
+                It "Role $($role.name) should have $($perm.permission) on $($perm.securable)"{
+                    "$($perm.Grantee), $($perm.permission), $($perm.SchemaOwner), $($perm.securable)" -in $rps.name | Should -BeTrue
+                }
+            }
+        }
     }
 }
