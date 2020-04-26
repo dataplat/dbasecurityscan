@@ -42,10 +42,10 @@ Function Reset-DssRoleSecurity {
         $errors = $TestResults.RolesResults.TestResult | Where-Object { $_.Result -eq 'Failed' }
         ForEach ($err in $errors) {
             Write-Verbose "$($err.name)"
-            if ("Role (.*) Should Exist (Config)"){
+            if ($err.Name -match "Role (.*) Should Exist \(Config\)"){
                 Write-Verbose "Adding missing role $($Matches[1])"
                 if ($OutputOnly -ne $true) {
-                    New-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $Matches[1]
+                    $null = New-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $Matches[1] Confirm:$false
                 }
                 [PsCustomObject]@{
                     Type       = "Role Error"
@@ -55,10 +55,10 @@ Function Reset-DssRoleSecurity {
                     SqlQuery   = $null
                     dbatools   = "New-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $($Matches[1])"
                 }
-            } elseif ("User $($user.username) Should be a member of role $($case.rolename) (Config)") {
+            } elseif ($err.Name -match "User (.*) Should be a member of role (.*) \(Config\)") {
                 Write-Verbose "Adding user $($Matches[1]) to role $($Matches[2])"
                 if ($OutputOnly -ne $true) {
-                    Add-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $Matches[2] -User $Matches[1]
+                    Add-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $Matches[2] -User $Matches[1] -Confirm:$false
                 }
                 [PsCustomObject]@{
                     Type       = "Role Error"
@@ -68,7 +68,7 @@ Function Reset-DssRoleSecurity {
                     SqlQuery   = $null
                     dbatools   = "Add-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $($Matches[2]) -User $($Matches[1])"
                 } 
-            } elseif ("Role $($case.rolename) Should have $($permission.permission) on $($permission.securable) (Config)") {
+            } elseif ($err.Name -match "Role (.*) Should have (.*) on (.*) \(Config\)") {
                 Write-Verbose "Granting permission $($Matches[2]) on object $($Matches[3]) to role $($Matches[1])"
                 $grantSql = "GRANT $($Matches[2]) on $($Matches[3]) to $($Matches[1])"
                 if ($OutputOnly -ne $true) {
@@ -79,6 +79,48 @@ Function Reset-DssRoleSecurity {
                     Error      = $err.Name
                     Action     = "Add"
                     Resolution = "Granting permission to role"
+                    SqlQuery   = $grantSql
+                    dbatools   = $null
+                } 
+            } elseif ($err.Name -match "Role (.*) Should Be in config \(DB\)") {
+                Write-Verbose "Removing role $($Matches[1])"
+                if ($OutputOnly -ne $true) {
+                    Remove-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $Matches[1] -Confirm:$false
+                }
+                [PsCustomObject]@{
+                    Type       = "Role Error"
+                    Error      = $err.Name
+                    Action     = "Drop"
+                    Resolution = "Remove Role"
+                    SqlQuery   = $null
+                    dbatools   = "Remove-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $($Matches[1])"
+                } 
+
+            } elseif ($err.Name -match "Rolemember (.*) Should Be in role (.*) \(DB\)") {
+                Write-Verbose "Removing $($Matches[1]) from Role $($Matches[2])"
+                $grantSql = "GRANT $($Matches[2]) on $($Matches[3]) to $($Matches[1])"
+                if ($OutputOnly -ne $true) {
+                    Remove-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $matches[2] -User $Matches[1] -Confirm:$false
+                }
+                [PsCustomObject]@{
+                    Type       = "Role Error"
+                    Error      = $err.Name
+                    Action     = "Drop"
+                    Resolution = "Removing User from Role"
+                    SqlQuery   = $null
+                    dbatools   = "Remove-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $($matches[2]) -User $($Matches[1])"
+                } 
+            } elseif ($err.Name -match "Role (.*) should have (.*) on (.*) in schema (.*) \(DB\)") {
+                Write-Verbose "Revoking permission $($Matches[2]) on object $($Matches[3]) from role $($Matches[1])"
+                $grantSql = "Revoke $($Matches[2]) on $($Matches[3]) from $($Matches[1])"
+                if ($OutputOnly -ne $true) {
+                    Invoke-DbaQuery -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Query $grantSQL
+                }
+                [PsCustomObject]@{
+                    Type       = "Role Error"
+                    Error      = $err.Name
+                    Action     = "Drop"
+                    Resolution = "Revoking permission from role"
                     SqlQuery   = $grantSql
                     dbatools   = $null
                 } 
