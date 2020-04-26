@@ -26,13 +26,13 @@ GO
 create role userrole AUTHORIZATION dbo;
 go
 
-sp_addrolemember 'userrole','alice';
+exec sp_addrolemember 'userrole','alice';
 go
 
-sp_addrolemember 'userrole','bob';
+exec sp_addrolemember 'userrole','bob';
 GO
 
-sp_addrolemember 'db_datawriter','carol';
+exec sp_addrolemember 'db_datawriter','carol';
 go
 
 create procedure sp_test as 

@@ -42,7 +42,7 @@ Function Reset-DssRoleSecurity {
         $errors = $TestResults.RolesResults.TestResult | Where-Object { $_.Result -eq 'Failed' }
         ForEach ($err in $errors) {
             Write-Verbose "$($err.name)"
-            if ($err.Name -match "Role (.*) Should Exist \(Config\)"){
+            if ($err.Name -match "Role (.*) Should Exist \(Config\)" -and $RemoveOnly.IsPresent -ne $true){
                 Write-Verbose "Adding missing role $($Matches[1])"
                 if ($OutputOnly -ne $true) {
                     $null = New-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $Matches[1] Confirm:$false
@@ -55,7 +55,7 @@ Function Reset-DssRoleSecurity {
                     SqlQuery   = $null
                     dbatools   = "New-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $($Matches[1])"
                 }
-            } elseif ($err.Name -match "User (.*) Should be a member of role (.*) \(Config\)") {
+            } elseif ($err.Name -match "User (.*) Should be a member of role (.*) \(Config\)" -and $RemoveOnly.IsPresent -ne $true) {
                 Write-Verbose "Adding user $($Matches[1]) to role $($Matches[2])"
                 if ($OutputOnly -ne $true) {
                     Add-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $Matches[2] -User $Matches[1] -Confirm:$false
@@ -68,7 +68,7 @@ Function Reset-DssRoleSecurity {
                     SqlQuery   = $null
                     dbatools   = "Add-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $($Matches[2]) -User $($Matches[1])"
                 } 
-            } elseif ($err.Name -match "Role (.*) Should have (.*) on (.*) \(Config\)") {
+            } elseif ($err.Name -match "Role (.*) Should have (.*) on (.*) \(Config\)" -and $RemoveOnly.IsPresent -ne $true) {
                 Write-Verbose "Granting permission $($Matches[2]) on object $($Matches[3]) to role $($Matches[1])"
                 $grantSql = "GRANT $($Matches[2]) on $($Matches[3]) to $($Matches[1])"
                 if ($OutputOnly -ne $true) {
@@ -82,7 +82,7 @@ Function Reset-DssRoleSecurity {
                     SqlQuery   = $grantSql
                     dbatools   = $null
                 } 
-            } elseif ($err.Name -match "Role (.*) Should Be in config \(DB\)") {
+            } elseif ($err.Name -match "Role (.*) Should Be in config \(DB\)" -and $AddOnly.IsPresent -ne $true) {
                 Write-Verbose "Removing role $($Matches[1])"
                 if ($OutputOnly -ne $true) {
                     Remove-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $Matches[1] -Confirm:$false
@@ -96,7 +96,7 @@ Function Reset-DssRoleSecurity {
                     dbatools   = "Remove-DbaDbRole -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $($Matches[1])"
                 } 
 
-            } elseif ($err.Name -match "Rolemember (.*) Should Be in role (.*) \(DB\)") {
+            } elseif ($err.Name -match "Rolemember (.*) Should Be in role (.*) \(DB\)" -and $AddOnly.IsPresent -ne $true) {
                 Write-Verbose "Removing $($Matches[1]) from Role $($Matches[2])"
                 $grantSql = "GRANT $($Matches[2]) on $($Matches[3]) to $($Matches[1])"
                 if ($OutputOnly -ne $true) {
@@ -110,7 +110,7 @@ Function Reset-DssRoleSecurity {
                     SqlQuery   = $null
                     dbatools   = "Remove-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -Role $($matches[2]) -User $($Matches[1])"
                 } 
-            } elseif ($err.Name -match "Role (.*) should have (.*) on (.*) in schema (.*) \(DB\)") {
+            } elseif ($err.Name -match "Role (.*) should have (.*) on (.*) in schema (.*) \(DB\)" -and $AddOnly.IsPresent -ne $true) {
                 Write-Verbose "Revoking permission $($Matches[2]) on object $($Matches[3]) from role $($Matches[1])"
                 $grantSql = "Revoke $($Matches[2]) on $($Matches[3]) from $($Matches[1])"
                 if ($OutputOnly -ne $true) {

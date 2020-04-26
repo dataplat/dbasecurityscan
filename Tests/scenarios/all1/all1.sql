@@ -3,6 +3,7 @@ go
 
 if exists (select * from sys.databases where name='all1')
 BEGIN
+alter database all1 set single_user with rollback immediate
 drop database all1
 END
 GO
@@ -50,4 +51,6 @@ grant select on schema::testing to schemaread;
 go
 
 
+create role RoleTest;
+GO
 

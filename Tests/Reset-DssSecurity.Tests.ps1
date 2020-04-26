@@ -36,6 +36,14 @@ Describe "$commandName Integration Tests" {
         $userAddPermSql = "grant alter on sp_perms to schemaread"
         $userAddPermFixSql = "revoke alter on sp_perms from schemaread"
         $userAddPermCheckSql = "select count(1) as count from sys.database_permissions where major_id=object_id('sp_perms') and grantee_principal_id=user_id('schemaread')"
+    
+        $roleDropSql = "drop role RoleTest"
+        $roleDropFixSql = "create role RoleTest authorization dbo"
+        $roleDropCheckSql = "select count(1) as 'count' from sys.database_principals where type='DATABASE_ROLE' and name='RoleTest'"
+
+        $roleMemberAddSql = "exec sp_addrolemember 'roletest','schemaread'"
+        $roleMemberFixSql = "exec sp_droprolemember 'roletest','schemaread'"
+        $roleMemberCheckSql = "select IS_ROLEMEMBER('roletest','schemaread') as 'member'"
     }
 
     Context "Test For output Only" {
@@ -44,14 +52,19 @@ Describe "$commandName Integration Tests" {
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $schemaDropPermissionSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userAddPermSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userRevokeRoleSql
+        Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleDropSql
+        Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleMemberAddSql
 
         $schemaAddCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $schemaAddCheckSql
         $schemaDropPermissionCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $schemaDropPermissionCheckSql
         $userRevokeRoleCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userRevokeRoleCheckSql
         $userAddPermCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userAddPermCheckSql
+        $roleDropCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleDropCheckSql
+        $roleMemberCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleMemberCheckSql
+        
 
         $results = Invoke-DssTest -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -database $script:database -Config $config -Quiet
-        It "Results should contain 3 User errors" {
+        It "Results should contain 5 User errors" {
             $results.UsersResults.FailedCount | Should -Be 3
         }
         It "Results should contain 2 Schema errors" {
@@ -69,6 +82,15 @@ Describe "$commandName Integration Tests" {
         It "schemaread Should  have alter on sp_perms before fix" {
             $userAddPermCheck.count | Should -Be 1
         }
+        It "Results Should contain 2 Role errors" {
+            $results.RolesResults.FailedCount | Should -Be 2
+        }
+        It "Role RoleTest should not exist before fix" {
+            $roleDropCheck.count | Should -Be 0
+        }
+        It "schemaread Should Be a member of userrole" {
+            $roleMemberCheck.member | Should -Be 1
+        }
         
         $output = Reset-DssSecurity -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -database $script:database -TestResult $results -OutputOnly
 
@@ -76,7 +98,9 @@ Describe "$commandName Integration Tests" {
         $schemaDropPermissionCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $schemaDropPermissionCheckSql
         $userRevokeRoleCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userRevokeRoleCheckSql
         $userAddPermCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userAddPermCheckSql
-
+        $roleDropCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleDropCheckSql
+        $roleMemberCheck = Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleMemberCheckSql
+        
         It "Schema 'notwanted' Should Still Exist before fix" {
             $schemaAddCheck.count | Should -Be 1
         }
@@ -93,11 +117,19 @@ Describe "$commandName Integration Tests" {
         It "Should have returned 5 items in output" {
             ($output | Measure-Object).count | Should -Be 5
         }
+        It "Role RoleTest should not exist before fix" {
+            $roleDropCheck.count | Should -Be 0
+        }
+        It "schemaread Should Be a member of userrole" {
+            $roleMemberCheck.member | Should -Be 1
+        }
 
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $schemaAddFixSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $schemaDropPermissionFixSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userAddPermFixSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userRevokeRoleFixSql
+        Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleDropFixSql
+        Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleMemberFixSql
     }
 
     Context "Test for Add Only" {

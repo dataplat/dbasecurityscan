@@ -45,7 +45,7 @@ function Reset-DssSecurity {
         } 
         if ($RoleConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Resetting Role config - not implelemented yet"
-            # $rolesFixResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Roles.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database } } -PassThru -Show $show
+            $rolesFixResults = Reset-DssRoleSecurity -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -TestResults $TestResults -OutputOnly:$OutputOnly -AddOnly:$AddOnly -RemoveOnly:$RemoveOnly 
         } 
         if ($SchemaConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Resetting Schema config"
