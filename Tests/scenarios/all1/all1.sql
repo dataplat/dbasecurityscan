@@ -40,6 +40,11 @@ AS
 select * from sys.all_columns;
 go
 
+create role PesterTest;
+GO
+
+create role PesterTest2;
+GO
 
 create schema testing AUTHORIZATION readonly;
 GO
@@ -49,8 +54,3 @@ go
 
 grant select on schema::testing to schemaread;
 go
-
-
-create role RoleTest;
-GO
-
