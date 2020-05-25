@@ -19,7 +19,7 @@ param (
                     ($dbObjects | Where-Object {$_.Name -eq $object.object -and $_.Schema -eq $object.schema} | measure-Object).count | Should -Be 1 -Because "$($object.schema).$($object.object) should exist and be unique"
                 }
                 ForEach ($perm in $object.permissions){
-                    It "$($perm.grantee) Should have $($perm.permission) on $($object.schema).$($object.object)" {
+                    It "$($perm.grantee) Should have $($perm.permission) on object $($object.schema).$($object.object) (Config)" {
                         ($permissions | Where-Object {$_.schemaowner -eq $object.schema -and $_.Securable -eq $object.object -and $_.grantee -eq $perm.grantee -and $_.permission -eq $perm.permission} | Measure-Object).count | Should -Be 1 -Because "$($perm.grantee) should have $($perm.permission) on $($object.schema).$($object.object)"
                     }
                 }
