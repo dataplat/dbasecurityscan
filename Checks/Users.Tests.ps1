@@ -34,8 +34,14 @@ Describe "Test config against database" {
             if (($case.Permissions | Measure-Object).Count -ge 1) {
                 # Go through to check the specified permissions are there
                 Foreach($permission in $case.Permissions){
-                    It "Should have assigned $($case.userName) permission $($permission.permission) on $($permission.securable) in $($permission.SchemaOwner)" {
-                        ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -eq $permission.securable -and $_.permission -eq $permission.permission} | Measure-Object).count | Should -Be 1
+                    if ($permission.RoleSecurableClass -eq 'SCHEMA') {
+                        It "Should have assigned $($case.userName) permission $($permission.permission) on schema $($permission.securable)" {
+                            ($testPermissions | Where-Object {$_.Grantee -eq $case.username -and $_.Securable -eq $permission.securable -and $_.permission -eq $permission.permission} | Measure-Object).count | Should -Be 1
+                        }
+                    } else {
+                        It "Should have assigned $($case.userName) permission $($permission.permission) on $($permission.securable) in $($permission.SchemaOwner)" {
+                            ($testPermissions | Where-Object { $_.Grantee -eq $case.username -and $_.Securable -eq $permission.securable -and $_.permission -eq $permission.permission } | Measure-Object).count | Should -Be 1
+                        }
                     }
 
                 }
