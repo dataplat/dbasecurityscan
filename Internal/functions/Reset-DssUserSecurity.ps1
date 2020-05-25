@@ -76,9 +76,7 @@ Function Reset-DssUserSecurity {
                     SqlQuery   = $null
                     dbatools   = "Add-DbaDbRoleMember -SqlInstance $($SqlInstance) -SqlCredential $($SqlCredential) -Database $($database) -User $($Matches[1]) -Role $($Matches[2]) -Confirm:$false"
                 }
-            }
-
-            if ($err.Name -match '$($case.username) Should be in $($role.Role) (DB)' -and $AddOnly -ne $True) {
+            } elseif ($err.Name -match '$($case.username) Should be in $($role.Role) (DB)' -and $AddOnly -ne $True) {
                 Write-Verbose "removing $($matches[1]) from role $($matches[2])"
                 if ($OutputOnly -ne $true) {
                     Remove-DbaDbRoleMember -SqlInstance $sqlInstance -SqlCredential $SqlCredential  -Database $database -User $Matches[1] -Role $Matches[2] -Confirm:$false
@@ -91,8 +89,7 @@ Function Reset-DssUserSecurity {
                     SqlQuery   = $null
                     dbatools   = "Remove-DbaDbRoleMember -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -User $($Matches[1]) -Role $($Matches[2]) -Confirm:$false"
                 }
-            }
-            if ($err.Name -match 'Should have assigned (.*) permission (.*) on (.*) in (.*)' -and $RemoveOnly -ne $True) {
+            } elseif ($err.Name -match 'Should have assigned (.*) permission (.*) on (.*) in (.*)' -and $RemoveOnly -ne $True) {
                 Write-Verbose "Granting 'GRANT $($Matches[2]) on $($Matches[4]).$($Matches[3]) to $($Matches[1])' "
                 $grantSql = "GRANT $($Matches[2]) on $($Matches[4]).$($Matches[3]) TO $($Matches[1])"
                 if ($OutputOnly -ne $True) {
@@ -106,8 +103,7 @@ Function Reset-DssUserSecurity {
                     SqlQuery   = $grantSql
                     dbatools   = $null
                 }
-            }
-            if ($err.Name -match 'User (.*) Should Only have (.*) on (.*) in (.*)' -and $AddOnly -ne $True) {
+            } elseif ($err.Name -match 'User (.*) Should Only have (.*) on (.*) in (.*)' -and $AddOnly -ne $True) {
                 Write-Verbose "Revoking 'REVOKE $($Matches[2]) on $($Matches[4]).$($Matches[3]) to $($Matches[1])' "
                 $revokeSql = "REVOKE $($Matches[2]) on $($Matches[4]).$($Matches[3]) FROM $($Matches[1])"
                 if ($OutputOnly -ne $True) {
@@ -121,9 +117,7 @@ Function Reset-DssUserSecurity {
                     SqlQuery   = $revokesql
                     dbatools   = $null
                 }
-            }
-
-            if ($err.name -match "Should have assigned (.*) permission (.*) on schema (.*)" -and $RemoveOnly -ne $True) {
+            } elseif ($err.name -match "Should have assigned (.*) permission (.*) on schema (.*)" -and $RemoveOnly -ne $True) {
                 Write-Verbose "Granting 'GRANT $($Matches[2]) on schema $($Matches[3]) to $($Matches[1])' "
                 $grantSql = "GRANT $($Matches[2]) on schema::$($Matches[3]) TO $($Matches[1])"
                 if ($OutputOnly -ne $True) {
@@ -137,8 +131,7 @@ Function Reset-DssUserSecurity {
                     SqlQuery   = $grantSql
                     dbatools   = $null
                 }
-            }
-            if ($err.Name -match '(.*)should exist in database') {
+            } elseif ($err.Name -match '(.*)should exist in database') {
                 # Need to sort out login names
             }
         }
