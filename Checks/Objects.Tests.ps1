@@ -5,7 +5,6 @@ param (
     [String]$Database,
     [switch]$IncludeSystemObjects
 )
-
         $dbObjects  = @()
 
         $dbObjects += Get-DbaDbTable -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $Database | Select-Object Schema, Name
@@ -15,7 +14,7 @@ param (
     
         Foreach ($object in $config.objects){
             Describe "Checking $($object.object)" {
-                It "$($object.schema).$($object.object) Should exist" {
+                It "$($object.schema).$($object.object) Should exist (Config)" {
                     ($dbObjects | Where-Object {$_.Name -eq $object.object -and $_.Schema -eq $object.schema} | measure-Object).count | Should -Be 1 -Because "$($object.schema).$($object.object) should exist and be unique"
                 }
                 ForEach ($perm in $object.permissions){
@@ -25,6 +24,22 @@ param (
                 }
             }
         }
+
+        Foreach ($object in $dbObjects){
+            Describe "Checking $($object.schema).$($object.Name) (DB)"{
+                It "Object $($object.schema).$($object.Name) Should be in Config (DB)"{
+                    ($config.objects | Where-Object {$_.object -eq $object.Name} | Measure-Object).count | Should -Be 1 
+                }
+
+                $cPerms = $config.objects | Where-Object {$_.schema -eq $object.schema -and $_.object -eq $object.name}
+                ForEach ($perm in ($permissions | Where-Object {$object.name -eq $_.Securable -and $_.schemaowner -eq $object.schema})) {
+                   It "Principal $($perm.Grantee) Should have $($perm.Permission) on object $($object.Schema).$($object.Name) (DB)" {
+                       ($cPerms.Permissions | Where-Object {$_.Grantee -eq $perm.Grantee -and $_.Permission -eq $perm.Permission} | Measure-Object).count | Should -Be 1
+                   }
+                }
+            }
+        }
+
 
         
 
