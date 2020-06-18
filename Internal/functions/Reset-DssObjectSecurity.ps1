@@ -63,7 +63,6 @@ Function Reset-DssObjectSecurity {
                 if ($OutputOnly -ne $true) {
                     $sqlQuery = "revoke $($Matches[2]) on $($Matches[3]).$($Matches[4]) from $($Matches[1])"
                     $results = Invoke-DbaQuery -SqlInstance $sqlinstance -SqlCredential $sqlCredential -Database $database -Query $sqlQuery
-
                 }
                 [PsCustomObject]@{
                     Type       = "Object Error"
