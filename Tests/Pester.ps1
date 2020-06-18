@@ -5,7 +5,7 @@ param (
 Write-Host "Starting Tests" -ForegroundColor Green
 # if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
     Write-Host "Installing Pester" -ForegroundColor Cyan
-    Install-Module Pester -Force -SkipPublisherCheck
+    Install-Module Pester -Force -SkipPublisherCheck -MaximumVersion 4.9.0
     Write-Host "Installing PSFramework" -ForegroundColor Cyan
     Install-Module PSFramework -Force -SkipPublisherCheck
     Write-Host "Installing dbatools" -ForegroundColor Cyan
@@ -13,7 +13,7 @@ Write-Host "Starting Tests" -ForegroundColor Green
     Write-Host "Installing PSScriptAnalyzer" -ForegroundColor Cyan
     Install-Module PSScriptAnalyzer -Force -SkipPublisherCheck
     Import-Module dbatools
-    Import-Module Pester
+    Import-Module Pester -MaximumVersion 4.9.0
     Import-Module PsFramework
     Import-Module PSScriptAnalyzer
 # }
