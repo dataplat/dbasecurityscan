@@ -53,12 +53,13 @@ function Reset-DssSecurity {
         } 
         if ($ObjectConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Resetting Object config - not implelemented yet"
-            # $objectFixResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database } } -PassThru -Show $show
+            $objectFixResults = Reset-DssObjectSecurity -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database -TestResults $TestResults -OutputOnly:$OutputOnly -AddOnly:$AddOnly -RemoveOnly:$RemoveOnly
         }
  
         $usersFixResults
+        $rolesFixResults
         $schemaFixResults
-
+        $objectFixResults
 
     }
 }

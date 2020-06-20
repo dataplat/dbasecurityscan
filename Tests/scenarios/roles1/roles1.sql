@@ -44,3 +44,5 @@ go
 
 create role removerole AUTHORIZATION dbo;
 go
+
+--grant execute on sp_test to removerole;

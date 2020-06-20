@@ -39,3 +39,12 @@ go
 
 grant select on SCHEMA::unowned to test;
 go
+
+-- select * from sys.database_role_members where member_principal_id=user_id('testuser') and role_principal_id = role
+
+-- select is_rolemember('db_datareader','testuser') as 'member'
+
+
+-- select role_id('db_datareader')
+
+-- select * from sys.all_objects where name like '%role%'

@@ -73,7 +73,7 @@ function Invoke-DssTest {
                 usersResults    = $usersResults
                 rolesResults    = $rolesResults
                 schemaResults   = $schemaResults
-                objectRestults  = $objectResults
+                objectResults  = $objectResults
             }
         }
     }
