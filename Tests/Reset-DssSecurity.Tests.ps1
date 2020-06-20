@@ -116,8 +116,8 @@ Describe "$commandName Integration Tests" {
             $userAddPermCheck.count | Should -Be 1
         }
 
-        It "Should have returned 5 items in output" {
-            ($output | Measure-Object).count | Should -Be 5
+        It "Should have returned 9 items in output" {
+            ($output | Measure-Object).count | Should -Be 9
         }
         It "Role PesterTest should not exist before fix" {
             $roleDropCheck.count | Should -Be 0
