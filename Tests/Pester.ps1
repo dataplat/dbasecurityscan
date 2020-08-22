@@ -2,8 +2,11 @@ param (
     $Show = "None"
 )
 
+Write-Host "Loading constants"
+. "$PSScriptRoot\constants.ps1"
+
 Write-Host "Starting Tests" -ForegroundColor Green
-# if ($env:BUILD_BUILDURI -like "vstfs*" -or $env:TRAVIS -eq 'true') {
+if ($script:local -ne $True) {
     Write-Host "Installing Pester" -ForegroundColor Cyan
     Install-Module Pester -Force -SkipPublisherCheck -MaximumVersion 4.9.0
     Write-Host "Installing PSFramework" -ForegroundColor Cyan
@@ -16,10 +19,7 @@ Write-Host "Starting Tests" -ForegroundColor Green
     Import-Module Pester -MaximumVersion 4.9.0
     Import-Module PsFramework
     Import-Module PSScriptAnalyzer
-# }
-
-Write-Host "Loading constants"
-. "$PSScriptRoot\constants.ps1"
+ }
 
 Write-Host "Building Test Scenarios"
 #instance slow to start mssql, so:
@@ -83,4 +83,8 @@ if ($null -ne $env:APPVEYOR_JOB_ID){
 }
 if ($totalFailed -gt 0) {
     throw "$totalFailed / $totalRun tests failed"
+}
+
+if ($script:local -eq $True) {
+    Remove-Item ./TestsResults*xml -force
 }

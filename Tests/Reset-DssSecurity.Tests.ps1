@@ -317,8 +317,6 @@ Describe "$commandName Integration Tests" {
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $schemaDropPermissionSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userAddPermSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userRevokeRoleSql
-        # New-DbaDbRole @script:appsplat -database $script:database -Role PesterTest2
-        # New-DbaDbRole @script:appsplat -database $script:database -Role PesterTest
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleDropSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $roleMemberAddSql
 
@@ -388,7 +386,7 @@ Describe "$commandName Integration Tests" {
             $roleMemberCheck.member | Should -Be 0
         }
 
-        # $postResults = Invoke-DssTest -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -database $script:database -Config $config -Quiet
+        $postResults = Invoke-DssTest -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -database $script:database -Config $config -Quiet
 
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $schemaDropPermissionFixSql
         Invoke-DbaQuery -sqlinstance $script:appvsqlinstance -sqlcredential $script:appvsqlcredential -Database $script:database -Query $userAddPermFixSql
