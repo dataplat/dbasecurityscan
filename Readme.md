@@ -34,41 +34,49 @@ Can fix Schema and User permission errors
 -
 
 ## Examples
-(consider some of this as aspirational rather than current reality)
-
-To create a new config document:
-
-`New-DssConfig -SqlInstance instance1 -Database test1 -ConfigPath ~/dbProject/security.json`
-
-To test an new database against an existng document:
-
-`Invoke-DssConfig -SqlInstance instance2 -Database AnotherDb -ConfigPath ~/dbProject/security.json`
-
-Skip a step, and just pipe the config (coming soon)
-`New-DssConfig -SqlInstance instance1 -Database test1 | Invoke-DssConfig -SqlServer instance2 -Database AnotherDb`
-
-How about pulling the database back into line? You generated db1.json some time ago, and want to see if there's been any database drift
-
+This example uses the roles database from the testing folder. This demo assumes you're running at the module root folder
 ```
-#Rehydrate the config object
-$config = ConvertFrom-Json (Get-Content ./db1.json -raw)
+--Setup a few environment variable
+$sqlUser='sqluser'
+$sqlPasswd= ConvertTo-SecureString 'P@ssw0rdl!ng' -AsPlainText -Force
+$sqlCred=New-Object System.Management.Automation.PSCredential ($sqlUser, $sqlPasswd)
+$sqlInstance='localhost:1433'
+$appsplat=@{
+  SqlInstance =$sqlInstance
+  SqlCredential = $sqlCred
+}
 
-#See if there's anything broken
-$results = Invoke-DssTest -SqlInstance Instance1 -config $config
+$srv = Connect-DbaInstance @appsplat
+$c = Get-Content './Tests/scenarios/roles1/roles1.sql' -Raw
+$srv.Databases['master'].ExecuteNonQuery($c)
 
-# Assume you've a sad face as lots of red failed tests have popped up :(
-# Let's review what's going to happen first
-$fixOutput = Reset-DssSecurity -SqlInstance Instance1 -TestResult $results -OutputOnly
+--create a new config
+$config = New-DssConfig @appsplat -Database roles1
 
-# $fixOuput now contains all the actions that will be undertaken. Once you've happy, let's go ahead and apply those by removing the OutputOnly switch:
-$fixOutput = Reset-DssSecurity -SqlInstance Instance1 -TestResult $results
+--remove config file
+Remove-Item ./dss.json -Force
 
-# And you're back to baseline! You're a DBA so paranoia is a job description, so confirm:
-$results = Invoke-DssTest -SqlInstance Instance1 -config $config
+--write out the config to a file
+$config | ConvertTo-Json -Depth 5 | Out-File ./dss.json
 
-# No Red, happy faces all around
+--take a look at the config file in vs code
+code ./dssNotts.json
+
+--Add an extra permission to the role
+Invoke-DbaQuery @appsplat -Database roles1 -Query "grant execute on sp_test to removerole"
+
+--run a compare against the config.
+$results = Invoke-DssTest @appsplat -Database roles1 -Config $config
+
+--errors were returned so try a dryrun to see how they could be fixed
+$dryRun = Reset-DssSecurity @appsplat -Database roles1 -TestResults $results -OutputOnly
+
+--If happy with the dry run, tell the command to fix the issues
+$realRun = Reset-DssSecurity @appsplat -Database roles1 -TestResults $results
+
+--Run a final test to check that everything is in line again
+$final = Invoke-DssTest @appsplat -Database roles1 -Config $config
 ```
-
 ## ToDo
 
 - Expand items included in config
