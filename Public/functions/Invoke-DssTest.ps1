@@ -59,9 +59,11 @@ function Invoke-DssTest {
             Write-Verbose -Message "Evaluating Policies"
             ForEach ($Policy in ($config.Policy | Where-Object {$_.Enabled -eq $True})){
                 Write-verbose "evaluating $($policy.name)"
+                $Results = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Policies\$($policy.Name).Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database } } -PassThru -Show $show
                 $policyResults += [PSCustomObject]@{
-                    policyName = $policy.Name
-                    Results = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Policies\$($policy.Name).Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database } } -PassThru -Show $show
+                    policyName  = $policy.Name
+                    PolicyPass  = -not ($Results.FailedCount)
+                    Results     = $Results
                 }
             }
         }
