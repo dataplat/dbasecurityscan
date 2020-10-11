@@ -9,6 +9,7 @@ Write-Host "Starting Tests" -ForegroundColor Green
 if ($script:local -ne $True) {
     Write-Host "Installing Pester" -ForegroundColor Cyan
     Install-Module Pester -Force -SkipPublisherCheck -MaximumVersion 4.9.0
+    Install-Module Pester -Force -SkipPublisherCheck 
     Write-Host "Installing PSFramework" -ForegroundColor Cyan
     Install-Module PSFramework -Force -SkipPublisherCheck
     Write-Host "Installing dbatools" -ForegroundColor Cyan
@@ -16,7 +17,6 @@ if ($script:local -ne $True) {
     Write-Host "Installing PSScriptAnalyzer" -ForegroundColor Cyan
     Install-Module PSScriptAnalyzer -Force -SkipPublisherCheck
     Import-Module dbatools
-    Import-Module Pester -MaximumVersion 4.9.0
     Import-Module PsFramework
     Import-Module PSScriptAnalyzer
  }
