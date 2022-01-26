@@ -12,6 +12,6 @@ param (
 
 Describe "Making sure 'No user permissions on base tables is true" {
     It "Should have 0 user permissions on base tables" {
-        (Get-DbaPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database | Where-Object {$_.GranteeType -eq 'SQL_USER' -and $_.SecurableType -eq 'USER_TABLE'}).count | Should -Be 0 -Because "Users should be accessing base tables via views or stored procedurs"
+        (Get-DbaPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database | Where-Object {$_.GranteeType -eq 'SQL_USER' -and $_.SecurableType -eq 'USER_TABLE'}).count | Should -Be 0 -Because "Users should be accessing base tables via views or stored procedures"
     }
 }
