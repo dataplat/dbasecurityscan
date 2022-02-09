@@ -12,6 +12,6 @@ param (
 
 Describe "Making sure all logins except SA are windows logins" {
     It "Should have 0 logins that aren't windows logins or SA" {
-        (Get-DbaLogin -sqlinstance facilitysql | Where-Object { $_.LoginType -ne 'WindowsUser' -and $_.name -ne 'sa'}).count | Should -Be 0 -Because "The only SQL login should be SA, all others should be Windows accounts"
+        (Get-DbaLogin -sqlinstance $SqlInstance -SqlCredential $SqlCredential | Where-Object { $_.LoginType -ne 'WindowsUser' -and $_.name -ne 'sa'}).count | Should -Be 0 -Because "The only SQL login should be SA, all others should be Windows accounts"
     }
 }
