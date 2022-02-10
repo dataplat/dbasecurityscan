@@ -10,8 +10,8 @@ param (
     [String]$Database
 )
 
-Describe "Making sure 'No user permissions on base tables is true" {
-    It "Should have 0 user permissions on base tables" {
-        (Get-DbaPermission -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $database | Where-Object { $_.GranteeType -eq 'SQL_USER' -and $_.SecurableType -eq 'USER_TABLE' }).count | Should -Be 0 -Because "Users should be accessing base tables via views or stored procedurs"
+Describe "Making sure all logins except SA are windows logins" {
+    It "Should have 0 logins that aren't windows logins or SA" {
+        (Get-DbaLogin -sqlinstance $SqlInstance -SqlCredential $SqlCredential | Where-Object { $_.LoginType -ne 'WindowsUser' -and $_.name -ne 'sa'}).count | Should -Be 0 -Because "The only SQL login should be SA, all others should be Windows accounts"
     }
 }
