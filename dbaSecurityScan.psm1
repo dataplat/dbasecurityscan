@@ -30,7 +30,7 @@ if ((Get-Module Pester).Version.Major -eq 5) {
         Remove-Module Pester -Force
         $CompatibleInstalledPester = Get-Module Pester -ListAvailable | Where-Object { $Psitem.Version.Major -eq 4 } | Sort-Object Version -Descending | Select-Object -First 1 
         Write-Verbose -Message "Removed Version 5 trying to import version $($CompatibleInstalledPester.Version.ToString())"
-        Import-Module $CompatibleInstalledPester.Path -Verbose -Scope Global
+        Import-Module $CompatibleInstalledPester.Path -Scope Global
     }
     catch {
         Write-Error -Message "Failed to remove Pester version 5 or import suitable version - Do you have Version 4* installed ?"
@@ -41,7 +41,7 @@ else {
     try {
         $CompatibleInstalledPester = Get-Module Pester -ListAvailable | Where-Object { $Psitem.Version.Major -le 4 -and $Psitem.Version.Major -gt 3 } | Sort-Object Version -Descending | Select-Object -First 1 
         Write-Verbose -Message "Trying to import version $($CompatibleInstalledPester.Version.ToString())"
-        Import-Module $CompatibleInstalledPester.Path -Verbose -Scope Global
+        Import-Module $CompatibleInstalledPester.Path -Scope Global
     }
     catch {
         Write-Error -Message "Failed to import suitable version - Do you have Version 4* installed ?"
