@@ -46,5 +46,6 @@ jobs:
     - name: Run a multi-line script
       run : |
         cd $ENV:GITHUB_WORKSPACE
+        gci 
         pwsh -F ./Tests/Pester.ps1
         

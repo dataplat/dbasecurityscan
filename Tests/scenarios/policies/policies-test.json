@@ -1,0 +1,32 @@
+{
+  "policy": [
+    {
+      "Name": "AllUsersMemberOfRole",
+      "Description": "Description: Ensures that all users are a member of a role ",
+      "Reason": "Reason: Better control of user data access if only allowed via views or stored procedures",
+      "Enabled": true
+    },
+    {
+      "Name": "NoSqlLogins",
+      "Description": "Description: Policy ensures that no login apart from sa is a SQL login",
+      "Reason": "Reason: Want all user managed via ADS/windows",
+      "Enabled": true
+    },
+    {
+      "Name": "NoUserPermissions",
+      "Description": "Description: Policy ensures that no user is granted direct permissions to any of the base tables in the database",
+      "Reason": "Reason: Make sure all users are members of a db role ",
+      "Enabled": true
+    }
+  ],
+  "config": {
+    "SystemObjects": false,
+    "Generated": "2022-02-07T15:36:09.298758+00:00",
+    "Database": "",
+    "SqlInstance": ""
+  },
+  "roles": null,
+  "users": null,
+  "schemas": null,
+  "objects": null
+}

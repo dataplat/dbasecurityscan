@@ -57,6 +57,10 @@ function New-DssConfig {
     begin {}
     process {}
     end {
+        $policies = Get-DssAssessmentPolicy
+        ForEach ($policy in $Policies){
+            $Policy | Add-Member -MemberType NoteProperty -Name 'Enabled' -Value $false
+        }
         $configSwitch = $true
         if ($UserConfig -or $SchemaConfig -or $RoleConfig -or $ObjectConfig){
             $configSwitch = $false
@@ -85,9 +89,10 @@ function New-DssConfig {
                 }   
 
         $output = [PsCustomObject]@{
-                    config = $internalConfig
-                    roles = $configRole
-                    users = $configUser
+                    policy  = $policies
+                    config  = $internalConfig
+                    roles   = $configRole
+                    users   = $configUser
                     schemas = $configSchema
                     objects = $configObject
         } 
