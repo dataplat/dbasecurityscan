@@ -17,12 +17,12 @@ function Get-DssAssessmentPolicy {
     foreach ($file in $files){
         $policies += [PSCustomObject]@{
                 Name        = $file.BaseName -replace '.Tests',''
-                Description = Get-Content $file | Where-Object { $_ -like "Description: *" }
-                Reason      = Get-Content $file | Where-Object { $_ -like "Reason: *" }
+                Description = Get-Content $file.FullName | Where-Object { $_ -like "Description: *" }
+                Reason      = Get-Content $file.FullName | Where-Object { $_ -like "Reason: *" }
             }
     }
     if ($null -ne $config) {
-        $config.policy | Select-Object -Property Name, Description, Enabled
+        $config.policy | Select-Object -Property Name, Description, Enabledz
     } else {
         $policies
     }
