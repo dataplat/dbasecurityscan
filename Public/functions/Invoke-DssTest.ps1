@@ -55,6 +55,7 @@ function Invoke-DssTest {
 
         $policyResults = @()
 
+        $failedtests = 0
         if ($PolicyCheck -eq $True -or $ConfigSwitch){
             Write-Verbose -Message "Evaluating Policies"
             ForEach ($Policy in ($config.Policy | Where-Object {$_.Enabled -eq $True})){
@@ -67,22 +68,32 @@ function Invoke-DssTest {
                 }
             }
         }
+        $failedtests += $Results.FailedCount
+
         if ($UserConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing User config"
             $usersResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         } 
+        $failedtests += $userResults.FailedCount
+
         if ($RoleConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing Role config"
             $rolesResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Roles.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         } 
+        $failedtests += $rolesResults.FailedCount
+
         if ($SchemaConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing Schema config"
             $schemaResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Schemas.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database; IncludeSystemObjects = $IncludeSystemObjects } } -PassThru -Show $show
         } 
+        $failedtests += $schemaResults.FailedCount
+
         if ($ObjectConfig -eq $True  -or $configSwitch) {
             Write-Verbose -Message "Testing Object config"
             $objectResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Objects.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         }
+        $failedtests += $objectResults.FailedCount
+
         if ($NoOutput -ne $true){
             [PSCustomObject]@{
                 policyResults   = $policyResults
@@ -90,6 +101,7 @@ function Invoke-DssTest {
                 rolesResults    = $rolesResults
                 schemaResults   = $schemaResults
                 objectResults   = $objectResults
+                failedTestCount = $failedtests
             }
         }
     }
