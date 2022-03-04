@@ -1,7 +1,7 @@
 <# 
 Description: Ensures that all users are a member of a role 
 
-Reason: Better control of user data access if only allowed via views or stored procedures
+Reason: Better control of user data access if permissions only granted to roles rather than each user specifically
 #>
 
 param (
@@ -16,7 +16,7 @@ Describe "All users in the database should be a member of a role" {
                     dp.principal_id, 
                     drm.role_principal_id 
                 from 
-                    sys.database_principals dp 
+                    sys.database_principals dp
                         left outer join sys.database_role_members drm on dp.principal_id=drm.member_principal_id
                 where 
                     dp.type='S' and 
