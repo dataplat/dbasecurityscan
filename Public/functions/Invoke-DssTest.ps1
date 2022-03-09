@@ -74,7 +74,7 @@ function Invoke-DssTest {
             Write-Verbose -Message "Testing User config"
             $usersResults = Invoke-Pester -Script @{ Path = "$Script:dssmoduleroot\Checks\Users.Tests.ps1"; Parameters = @{SqlInstance = $sqlInstance; SqlCredential = $sqlCredential; Config = $config; Database = $database} } -PassThru -Show $show
         } 
-        $failedtests += $userResults.FailedCount
+        $failedtests += $usersResults.FailedCount
 
         if ($RoleConfig -eq $True -or $configSwitch) {
             Write-Verbose -Message "Testing Role config"
